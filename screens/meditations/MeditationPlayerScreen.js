@@ -12,18 +12,22 @@ import Button from "../../components/Button";
 
 // Doc audio: https://docs.expo.dev/versions/latest/sdk/av/
 
-
 import { BACKEND_ADDRESS } from "../../config";
 
 export default function MeditationPlayer({ route, navigation }) {
   // Params passés par l'écran MeditationHomeScreen
   const { type, mode, duration } = route.params;
 
-  // states définis
+  // states récup url backend et play sound 
   const [audioUrl, setAudioUrl] = useState("");
   const [sound, setSound] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(true);
+
+// states en lien avec la progression
+const [position, setPosition] = useState(0);      // position en ms
+const [durationMs, setDurationMs] = useState(1);  // durée totale en ms
+const [showExitPopup, setShowExitPopup] = useState(false); // popup sortie
 
   // console.log("audioURL:", audioUrl);
   // console.log("sound", sound);
@@ -54,9 +58,10 @@ export default function MeditationPlayer({ route, navigation }) {
         // });
 
         // charger le son
-        const { sound: newSound } = await Audio.Sound.createAsync(//createAsync()télécharge le fichier url et renvoie l'objet sound
+        const { sound: newSound } = await Audio.Sound.createAsync(
+          //createAsync()télécharge le fichier url et renvoie l'objet sound
           { uri: data.audioUrl },
-          { shouldPlay: true },//lance automatiquement la lecture
+          { shouldPlay: true }, //lance automatiquement la lecture
           (status) => {
             console.log("status audio :", status);
           }
@@ -84,7 +89,7 @@ export default function MeditationPlayer({ route, navigation }) {
     if (!sound) return;
 
     if (isPlaying) {
-      await sound.pauseAsync();//met en pause
+      await sound.pauseAsync(); //met en pause
       setIsPlaying(false);
     } else {
       await sound.playAsync(); //démarrage de la lecture
@@ -96,16 +101,14 @@ export default function MeditationPlayer({ route, navigation }) {
   const stopMeditation = async () => {
     // sécurité nettoyage du son quand on quitte la page
     if (sound) {
-      await sound.stopAsync();//arrêt et revient à zéro
-      await sound.unloadAsync();//libérer la mémoire (destruction du playser)
+      await sound.stopAsync(); //arrêt et revient à zéro
+      await sound.unloadAsync(); //libérer la mémoire (destruction du playser)
     }
 
     navigation.goBack();
   };
 
   return (
-  
-
     <ImageBackground
       source={require("../../assets/meditation/meditationBkg.png")}
       style={styles.container}
@@ -134,7 +137,6 @@ export default function MeditationPlayer({ route, navigation }) {
     label="Retour Etagère"
     type="primary"
     /> */}
-
     </ImageBackground>
   );
 }
