@@ -10,7 +10,7 @@ import MapScreen from "../screens/map/MapScreen";
 //lessons
 import LessonScreen from "../screens/lessons/LessonScreen";
 import QuizzScreen from "../screens/lessons/QuizzScreen";
-import FlashcardScreen from "../screens/lessons/FlashCardScreen";
+import FlashcardScreen from "../screens/lessons/FlashcardScreen";
 
 // Meditations
 import MeditationHomeScreen from "../screens/meditations/MeditationHomeScreen";
