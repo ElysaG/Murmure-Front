@@ -7,9 +7,12 @@ import WelcomeScreen from "../screens/home/WelcomeScreen";
 
 import HomeScreen from "../screens/home/HomeScreen";
 
+import CompteScreen from "../screens/compte/compteScreen";
+
 import ShelvesScreen from "../screens/shelves/ShelvesScreen";
 
 import MapScreen from "../screens/map/MapScreen";
+
 
 //lessons
 import LessonScreen from "../screens/lessons/LessonScreen";
@@ -46,6 +49,13 @@ export default function AppNavigator() {
 
 {     /* Home et loading */}
       <Stack.Screen name="Home" component={HomeScreen} />
+
+      {/* Chat avec IA */}
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
+
+      {/* Mon Compte */}
+      <Stack.Screen name="Compte" component={CompteScreen} />
+
 
       {/* Shelves (étagère) */}
       <Stack.Screen name="Shelves" component={ShelvesScreen} />

@@ -112,10 +112,13 @@ export default function HomeScreen({ navigation }) {
                   resizeMode="cover"
                 /> */}
                   <Button
-                    // onPress={startMeditation}
                       label="Mon compte"
                       type="primary"
                       style={styles.compteButton}
+                      onPress={() => {
+                        console.log("ok le btn mon compte fonctionne!");
+                        navigation.navigate("Compte");
+                      }}
                   />
 
                   <View style={styles.header}>
@@ -138,11 +141,15 @@ export default function HomeScreen({ navigation }) {
                     </View>
 
                   <View style={styles.messageia}>
-                    <TextInput
+                    <Text
                       style={styles.dialogueperroquet}
-                      placeholder="Ecris moi si tu veux me parler !"
+                      // placeholder="Ecris moi si tu veux me parler !"
                       placeholderTextColor="#224C4A"
-                    />
+                      onPress={() => {
+                        console.log("ok le lien vers chatscreen fonctionne!");
+                        navigation.navigate("ChatScreen");
+                      }}
+                    >Ecris moi si tu veux me parler !</Text>
                   </View>  
                     
 
@@ -254,7 +261,8 @@ const styles = StyleSheet.create({
     top: 5,
     left: 1,
     marginBottom: 50,
-    marginTop:30,
+    marginTop: 30,
+    zIndex: 100, // S'assure que le bouton est au-dessus des autres éléments
   },
 
   // title: {
