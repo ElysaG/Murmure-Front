@@ -1,6 +1,4 @@
-// import { Platform } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// import { createStackNavigator } from "@react-navigation/stack";
 
 // Import screens
 import WelcomeScreen from "../screens/home/WelcomeScreen";
@@ -31,10 +29,6 @@ import ChatScreen from "../screens/chat/ChatScreen";
 
 // Use different Stack navigators for web and native platforms
 const Stack = createNativeStackNavigator();
-
-  // const Stack = Platform.OS === "web"
-  // ? createStackNavigator()
-  // : createNativeStackNavigator();
 
 export default function AppNavigator() {
   return (
