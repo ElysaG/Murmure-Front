@@ -101,7 +101,7 @@ export default function MeditationPlayer({ route, navigation }) {
             clearInterval(interval);
             setIsSoloPlaying(false);
             setShowCongrats(true); //Affichera la modal congratulations
-            return totalSoloDuration; //ecouteSolo à la valeur max
+            return totalSoloDuration; //ecouleSolo à la valeur max
           }
           return prev + 1;
         });
