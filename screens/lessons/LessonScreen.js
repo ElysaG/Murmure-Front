@@ -1,45 +1,43 @@
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useState } from "react";
 
+import ConfirmModal from "../../components/ConfirmModal";
 import Button from "../../components/Button";
 import Label from "../../components/Label";
 
-const chapters = [
-  {
-    title: "Bienvenue dans la foret",
-    logo: "🌳",
-    content: `Murmure vous guide à travers un parcours immersif qui vous aide à explorer vos émotions, comprendre l’anxiété, pratiquer le lâcher-prise et vivre pleinement l’instant présent. 
-  
-À chaque étape, des conseils et exercices vous accompagnent pour retrouver calme, sérénité et bien-être. 
-
-A vous de jouer !`,
-  },
-  {
-    title: "Chapitre 1: Qu'est ce que l'instant present ?",
-    logo: "🌏",
-    content: `L’instant présent désigne le moment que tu vis ici et maintenant, sans te perdre dans le passé ni anticiper l’avenir. 
-
-C’est ce que tu ressens, vois, entends et vis à cet instant précis. Se concentrer sur l’instant présent aide à réduire le stress et l’anxiété, car tu ne rumines plus ce qui a été ou ce qui pourrait arriver. 
-
-Vivre l’instant présent, c’est être pleinement conscient de soi et du monde autour de soi, ici et maintenant. 
-
-Es-tu vraiment dans l’instant présent ?`,
-    quizz: {
-      question: "Quand tu marches dehors, tu…",
-      answers: [
-        "Regarde ton téléphone et pense à ta to-do list",
-        "Observe un peu autour de toi, mais ton esprit vagabonde",
-        "Sens le vent, entends les sons et profites de chaque pas",
-      ],
-    },
-    flashcard:
-      "L’instant présent désigne le moment que tu vis ici et maintenant, sans te perdre dans le passé ni anticiper l’avenir. C’est ce que tu ressens, vois, entends et vis à cet instant précis. Se concentrer sur l’instant présent aide à réduire le stress et l’anxiété, car tu ne rumines plus ce qui a été ou ce qui pourrait arriver. Vivre l’instant présent, c’est être pleinement conscient de soi et du monde autour de soi, ici et maintenant. Es-tu vraiment dans l’instant présent ?",
-  },
-  // Add more chapters as needed
-];
-
 export default function LessonScreen({ navigation, route }) {
   const insets = useSafeAreaInsets(); //utilisé pour recuperer les dimension de la safeArea de l'ecran
+  const [showExitPopup, setShowExitPopup] = useState(false); // popup sortie
+
+  const chapters = [
+    {
+      title: "Bienvenue dans la foret",
+      logo: "🌳",
+      content: `Murmure vous guide à travers un parcours immersif qui vous aide à explorer vos émotions, comprendre l’anxiété, pratiquer le lâcher-prise et vivre pleinement l’instant présent. \n
+  À chaque étape, des conseils et exercices vous accompagnent pour retrouver calme, sérénité et bien-être. \n
+  A vous de jouer !`,
+    },
+    {
+      title: "Chapitre 1: Qu'est ce que l'instant present ?",
+      logo: "🌏",
+      content: `L’instant présent désigne le moment que tu vis ici et maintenant, sans te perdre dans le passé ni anticiper l’avenir. \n
+  C’est ce que tu ressens, vois, entends et vis à cet instant précis. Se concentrer sur l’instant présent aide à réduire le stress et l’anxiété, car tu ne rumines plus ce qui a été ou ce qui pourrait arriver. \n
+  Vivre l’instant présent, c’est être pleinement conscient de soi et du monde autour de soi, ici et maintenant. \n
+  Es-tu vraiment dans l’instant présent ?`,
+      quizz: {
+        question: "Quand tu marches dehors, tu…",
+        answers: [
+          "Regarde ton téléphone et pense à ta to-do list",
+          "Observe un peu autour de toi, mais ton esprit vagabonde",
+          "Sens le vent, entends les sons et profites de chaque pas",
+        ],
+      },
+      flashcard:
+        "L’instant présent désigne le moment que tu vis ici et maintenant, sans te perdre dans le passé ni anticiper l’avenir. C’est ce que tu ressens, vois, entends et vis à cet instant précis. Se concentrer sur l’instant présent aide à réduire le stress et l’anxiété, car tu ne rumines plus ce qui a été ou ce qui pourrait arriver. Vivre l’instant présent, c’est être pleinement conscient de soi et du monde autour de soi, ici et maintenant. Es-tu vraiment dans l’instant présent ?",
+    },
+    // Add more chapters as needed
+  ];
 
   const chapterIndex = route?.params?.lessonNumber ?? 0; // Use React navigation parameters. Default to 0 if route parameter not specified
   const chapter = chapters[chapterIndex];
@@ -47,7 +45,9 @@ export default function LessonScreen({ navigation, route }) {
   return (
     <View style={styles.mainContainer}>
       {/* Top + marginTop dynamic en fonction de l'inset.top */}
-      <Image style={[styles.coco, { top: Math.max(insets.top, 20) }]} source={require("../../assets/coco.png")} />
+      <Label onPress={() => navigation.navigate("Quizz")} style={[styles.coco, { top: Math.max(insets.top, 20) }]}>
+        <Image source={require("../../assets/coco.png")} />
+      </Label>
       <View style={[styles.contentContainer, { marginTop: Math.max(insets.top + 120, 20) }]}>
         <View style={styles.title}>
           <Text style={styles.titleText}>{chapter.title}</Text>
@@ -60,9 +60,16 @@ export default function LessonScreen({ navigation, route }) {
 
       {/* marginBottom dynamic en fonction de l'inset.bottom */}
       <View style={[styles.buttonContainer, { marginBottom: 20 + insets.bottom }]}>
-        <Button onPress={() => navigation.goBack()} type="primary" />
-        <Button onPress={() => navigation.navigate("Quizz")} label="suivant" type="next" />
+        <Button onPress={() => navigation.goBack()} type="primary" label="Quitter" />
+        <Button onPress={() => navigation.navigate("Quizz")} type="primary" label="Suivant" />
       </View>
+
+      <ConfirmModal
+        visible={showExitPopup}
+        message="Voulez-vous arrêter la méditation ?"
+        onCancel={() => setShowExitPopup(false)}
+        onConfirm={() => navigation.navigate("Quizz")}
+      />
     </View>
   );
 }
@@ -70,7 +77,7 @@ export default function LessonScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: "lightgreen",
+    backgroundColor: "#95BE96",
     position: "relative", //needed for "coco position:absolute" to work
   },
   coco: {
@@ -111,8 +118,5 @@ const styles = StyleSheet.create({
     margin: 20,
     flexDirection: "row",
     justifyContent: "space-evenly",
-    backgroundColor: "coral",
-    borderRadius: 20,
-    padding: 10,
   },
 });
