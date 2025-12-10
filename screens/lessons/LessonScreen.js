@@ -163,14 +163,18 @@ export default function LessonScreen({ navigation, route }) {
   return (
     <View style={styles.mainContainer}>
       {/* Top + marginTop dynamic en fonction de l'inset.top */}
-      <Label
+      <TouchableOpacity
         onPress={() => {
           setExitBehavior(() => () => navigation.pop(2));
           setShowExitPopup(true);
         }}
         style={[styles.coco, { top: Math.max(insets.top, 20) }]}>
-        <Image source={require("../../assets/coco.png")} />
-      </Label>
+        <Image
+          source={require("../../assets/coco.png")}
+          style={{ width: 130, height: 130, transform: [{ scaleX: -1 }] }}
+        />
+      </TouchableOpacity>
+
       <View style={[styles.contentContainer, { marginTop: Math.max(insets.top + 120, 20) }]}>
         {(() => {
           switch (contentToDisplay) {
@@ -198,12 +202,7 @@ export default function LessonScreen({ navigation, route }) {
           label="Quitter"
         />
         {contentToDisplay !== "quizz" ? (
-          <Button
-            style={{ width: 110 }}
-            onPress={() => handleNextButton()}
-            type="primary"
-            label="Suivant"
-          />
+          <Button style={{ width: 110 }} onPress={() => handleNextButton()} type="primary" label="Suivant" />
         ) : (
           <Button style={{ backgroundColor: "", width: 110 }} />
         )}
@@ -231,7 +230,6 @@ const styles = StyleSheet.create({
     right: "10%", //place it 10% to the right of the screen
     width: 130,
     height: 130,
-    transform: [{ scaleX: -1 }], //flip image horizontaly
     zIndex: 2, // This define the priority of the image (2 > 1 so image is in front of contentContainer)
   },
   contentContainer: {
