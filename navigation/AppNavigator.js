@@ -5,9 +5,12 @@ import WelcomeScreen from "../screens/home/WelcomeScreen";
 
 import HomeScreen from "../screens/home/HomeScreen";
 
+import CompteScreen from "../screens/compte/compteScreen";
+
 import ShelvesScreen from "../screens/shelves/ShelvesScreen";
 
 import MapScreen from "../screens/map/MapScreen";
+
 
 //lessons
 import LessonScreen from "../screens/lessons/LessonScreen";
@@ -26,8 +29,6 @@ import RespirationCountdownScreen from "../screens/respirations/RespirationCount
 import ChatScreen from "../screens/chat/ChatScreen";
 
 // Importer tous les screens : auth,lessons, loading, etc...
-
-// Use different Stack navigators for web and native platforms
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
@@ -40,8 +41,15 @@ export default function AppNavigator() {
       {/* Page de bienvenue paysage */}
       <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
 
-      {/* Home et loading */}
+{     /* Home et loading */}
       <Stack.Screen name="Home" component={HomeScreen} />
+
+      {/* Chat avec IA */}
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
+
+      {/* Mon Compte */}
+      <Stack.Screen name="Compte" component={CompteScreen} />
+
 
       {/* Shelves (étagère) */}
       <Stack.Screen name="Shelves" component={ShelvesScreen} />
