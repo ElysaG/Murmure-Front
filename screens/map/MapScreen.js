@@ -10,25 +10,21 @@ import Label from "../../components/Label";
 
 export default function MapScreen({ navigation }) {
   return (
-    <ImageBackground style={styles.background}
-            source={require('../../assets/map.png')}
-            resizeMode="cover"
-            
-    >
-      <Image source={require('../../assets/perroquet.png')} 
-                     style={styles.perroquet}
-      />
+    <ImageBackground style={styles.background} source={require("../../assets/map.png")} resizeMode="cover">
+      <Image source={require("../../assets/perroquet.png")} style={styles.perroquet} />
 
-        <View style={styles.container}>
-          {/* <Text style={styles.title}>Bienvenue sur la Carte</Text>
+      <View style={styles.container}>
+        {/* <Text style={styles.title}>Bienvenue sur la Carte</Text>
           <Text style={styles.subtitle}>Ecran Map</Text> */}
 
-          {/* Labels vers Meditations, respirations, chat */}
-          <Label style={styles.chapitre1} onPress={() => navigation.navigate("lesson")}>Chapitre 1</Label>
+        {/* Labels vers Meditations, respirations, chat */}
+        <Label style={styles.chapitre1} onPress={(() => navigation.navigate("Lesson", { lessonNumber: 1 }))}>
+          Chapitre 1
+        </Label>
 
-          {/* Bouton Précédent */}
-          <Button style={styles.btnBack} onPress={() => navigation.goBack()} type="back" />
-        </View>
+        {/* Bouton Précédent */}
+        <Button style={styles.btnBack} onPress={() => navigation.goBack()} type="back" />
+      </View>
     </ImageBackground>
   );
 }
