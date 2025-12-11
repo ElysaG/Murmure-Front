@@ -23,8 +23,8 @@ const COLORS = {
   orPaleClair: "#fff7e4ff",
   bleuMenthe: "#AAD2D0",
   bleuMentheClair: "#b2c5c4ff",
-  pecheRosee: "#FBB89D",
-  pecheRoseeClair: "#efcec1ff",
+  pecheRosee: "#f29570ff",
+  pecheRoseeClair: "#FBB89D",
   vertSauge: "#95BE96",
   vertSaugeClair: "#eaf8eaff",
 };
@@ -90,14 +90,13 @@ export default function ChatScreen({ route, navigation }) {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={60} // parfois nécessaire en modal
       >
+        {/* Container */}
         {/* Fermer la modale */}
         <View style={styles.handleContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="chevron-down" size={30} color="#5A4E4D" />
           </TouchableOpacity>
         </View>
-
-        {/* Container */}
         <View style={styles.card}>
           <Text style={styles.title}>Chat Murmure</Text>
 
@@ -127,14 +126,6 @@ export default function ChatScreen({ route, navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-        {/* Bouton retour */}
-        {/* <View>
-          <Button
-            type="back"
-            style={{ marginTop: 20 }}
-            onPress={() => navigation.goBack()}
-          />
-        </View> */}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -143,7 +134,7 @@ export default function ChatScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "rgba(247, 243, 237, 0)",
+    backgroundColor: COLORS.pecheRoseeClair,
   },
 
   outerContainer: {
@@ -232,7 +223,7 @@ const styles = StyleSheet.create({
   },
 
   sendButton: {
-    backgroundColor: COLORS.vertSauge,
+    backgroundColor: COLORS.pecheRosee,
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 20,

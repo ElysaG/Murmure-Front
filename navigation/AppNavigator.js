@@ -72,12 +72,12 @@ export default function AppNavigator() {
         name="Chat"
         component={ChatScreen}
         options={{
-          presentation: "modal",
+           presentation: "modal",
           headerShown: false,
           animation: "slide_from_bottom",
-          behavior: "position",
-          // cardStyle: { backgroundColor: "transparent" },
-        }}
+          keyboardHandlingEnabled: false, // <-- Ajoute ça
+          // behavior: "position", //ne pas effacer, indispensable pour KeyAvoindingView
+         }}
       />
     </Stack.Navigator>
   );
