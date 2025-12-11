@@ -67,12 +67,18 @@ export default function AppNavigator() {
         component={RespirationCountdownScreen}
       />
 
-      {/* Chat */}
-      <Stack.Screen name="Chat" component={ChatScreen} />
-      
-
+      {/* Chat affiché en modale, depuis le bas*/}
+      <Stack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{
+          presentation: "modal",
+          headerShown: false,
+          animation: "slide_from_bottom",
+          behavior: "position",
+          // cardStyle: { backgroundColor: "transparent" },
+        }}
+      />
     </Stack.Navigator>
-
-
   );
 }

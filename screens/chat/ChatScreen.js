@@ -5,7 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  FlatList, //liste performante
+  FlatList,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
@@ -14,15 +14,25 @@ import {
 import { io } from "socket.io-client";
 import * as Haptics from "expo-haptics";
 // import { router } from "expo-router";
-
 import Button from "../../components/Button";
-
 import { BACKEND_ADDRESS } from "../../config";
+import { Ionicons } from "@expo/vector-icons";
+
+const COLORS = {
+  orPale: "#EBC97D",
+  orPaleClair: "#fff7e4ff",
+  bleuMenthe: "#AAD2D0",
+  bleuMentheClair: "#b2c5c4ff",
+  pecheRosee: "#FBB89D",
+  pecheRoseeClair: "#efcec1ff",
+  vertSauge: "#95BE96",
+  vertSaugeClair: "#eaf8eaff",
+};
 
 export default function ChatScreen({ route, navigation }) {
   const [socket, setSocket] = useState(null);
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]); // { sender: "me"|"ai", text: "..." }
+  const [message, setMessage] = useState(""); //message texte le l'utilisateur
+  const [messages, setMessages] = useState([]); // historique des messages
   const [loading, setLoading] = useState(false);
 
   // Connexion au serveur Socket.IO
@@ -52,7 +62,7 @@ export default function ChatScreen({ route, navigation }) {
 
     const text = message.trim();
 
-    // Ajouter ton propre message dans la liste
+    // Ajouter le message de l'utilisateur à la liste
     setMessages((prev) => [...prev, { sender: "me", text }]);
 
     setMessage("");
@@ -61,6 +71,7 @@ export default function ChatScreen({ route, navigation }) {
     socket.emit("user-message", text);
   };
 
+  // renderMessage est utilisé pour affichage par la Flatlist, (item = sender + text)
   const renderMessage = ({ item }) => (
     <View
       style={[
@@ -77,31 +88,36 @@ export default function ChatScreen({ route, navigation }) {
       <KeyboardAvoidingView
         style={styles.outerContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={60} // parfois nécessaire en modal
       >
-        {/* Cadre */}
+        {/* Fermer la modale */}
+        <View style={styles.handleContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-down" size={30} color="#5A4E4D" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Container */}
         <View style={styles.card}>
           <Text style={styles.title}>Chat Murmure</Text>
 
+          {/* Affichage de tous les messages */}
           <FlatList
             data={messages}
             renderItem={renderMessage}
-            keyExtractor={(_, index) => index.toString()}
+            keyExtractor={(item, index) => index.toString()}
             style={styles.messagesList}
           />
           {/* Loading */}
           {loading && (
-            <ActivityIndicator
-              size="large"
-              color="#b59df0"
-              style={{ marginBottom: 10 }}
-            />
+            <ActivityIndicator size="large" color={COLORS.vertSaugeClair} />
           )}
 
           {/* Input + bouton envoyer */}
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Exprime-toi..."
+              placeholder="Raconte-moi..."
               placeholderTextColor="#8c8c8c"
               value={message}
               onChangeText={setMessage}
@@ -112,13 +128,13 @@ export default function ChatScreen({ route, navigation }) {
           </View>
         </View>
         {/* Bouton retour */}
-        <View style={{ marginTop: 20 }}>
+        {/* <View>
           <Button
             type="back"
             style={{ marginTop: 20 }}
-            // onPress={() => router.back()} //modale
+            onPress={() => navigation.goBack()}
           />
-        </View>
+        </View> */}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -127,7 +143,7 @@ export default function ChatScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F7F3ED",
+    backgroundColor: "rgba(247, 243, 237, 0)",
   },
 
   outerContainer: {
@@ -135,7 +151,22 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent: "space-between",
   },
+  handleContainer: {
+    width: "100%",
+    alignItems: "center",
+    paddingTop: 6,
+    paddingBottom: 10,
+  },
+  handleBar: {
+    width: 40,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: "#CCC",
+    alignSelf: "center",
+    marginBottom: 10,
+  },
 
+  // conteneur blanc bords arrondis
   card: {
     flex: 1,
     backgroundColor: "#FFFFFF",
@@ -156,7 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     color: "#5A4E4D",
   },
-
+  // conteneur messages
   messagesList: {
     flex: 1,
     marginBottom: 10,
@@ -168,13 +199,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginVertical: 4,
   },
-
+  // style conditionnel me / ai
   meBubble: {
-    backgroundColor: "#DDE7FF",
+    backgroundColor: COLORS.orPaleClair,
     alignSelf: "flex-end",
   },
   aiBubble: {
-    backgroundColor: "#F4F0FF",
+    backgroundColor: COLORS.vertSaugeClair,
     alignSelf: "flex-start",
   },
 
@@ -201,7 +232,7 @@ const styles = StyleSheet.create({
   },
 
   sendButton: {
-    backgroundColor: "#b59df0",
+    backgroundColor: COLORS.vertSauge,
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 20,
