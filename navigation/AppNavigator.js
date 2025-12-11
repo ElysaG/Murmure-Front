@@ -34,7 +34,6 @@ export default function AppNavigator() {
   return (
     <Stack.Navigator
       initialRouteName="WelcomeScreen" //Ici chacun met le nom de son screen, comme ça qd on lance expoGo on arrive dessus. A la fin, on mettre "Home"
-
       screenOptions={{ headerShown: false }}
     >
       {/* Page de bienvenue paysage */}
@@ -70,6 +69,10 @@ export default function AppNavigator() {
 
       {/* Chat */}
       <Stack.Screen name="Chat" component={ChatScreen} />
+      
+
     </Stack.Navigator>
+
+
   );
 }
