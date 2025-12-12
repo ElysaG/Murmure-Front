@@ -19,7 +19,7 @@ import Button from '../../components/Button';
 
 
 // Obtenir les dimensions de l'écran pour l'exemple
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 // --- 1. LE COMPOSANT BOUTON PULSANT ---
 // Ce composant gère sa propre animation pour être réutilisable.
@@ -53,9 +53,10 @@ const PulsingButton = ({ onPress, color, style }) => {
   // Couleur dynamique basée sur la prop 'color'
   // const ringColor = color || '#FF5722';
   // const centerColor = color || '#FF5722';
-  const rippleColor = color || '#FF5722';
+  const rippleColor = color || "#FF5722";
 
-  return ( // RETURN DES PULSING BUTTON
+  return (
+    // RETURN DES PULSING BUTTON
     <View style={[styles.buttonWrapper, style]}>
       {/* L'anneau animé en arrière-plan */}
       <Animated.View
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   },
 
   perroquet: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 2,
     width: 100,
@@ -250,12 +251,12 @@ const styles = StyleSheet.create({
   },
 
   dialogueperroquet: {
-    position: 'absolute',
+    position: "absolute",
     top: 6,
     color: '#224C4A',
     fontSize: 15.5,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
     lineHeight: 21,
     marginLeft: 20,
   },
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
   },
 
   compteButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 5,
     left: 1,
     marginTop: 30,
@@ -306,11 +307,6 @@ const styles = StyleSheet.create({
   //   marginBottom: 50,
   // },
 
-
-
-
-
-
   // backgroundImage: {
   //   width: '100%',
   //   height: '100%',
@@ -322,8 +318,8 @@ const styles = StyleSheet.create({
     position: 'absolute', // Permet de placer le bouton sur l'image
     width: 50, // Taille globale de la zone du bouton
     height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     // zIndex assure que le bouton est au-dessus de l'image
     zIndex: 10,
   },
