@@ -35,13 +35,11 @@ export default function AppNavigator() {
   return (
     <Stack.Navigator
       initialRouteName="WelcomeScreen" //Ici chacun met le nom de son screen, comme ça qd on lance expoGo on arrive dessus. A la fin, on mettre "WelcomeScreen"
-
-      screenOptions={{ headerShown: false }}
-    >
+      screenOptions={{ headerShown: false }}>
       {/* Page de bienvenue paysage */}
       <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
 
-      { /* Home et loading */}
+      {/* Home et loading */}
       <Stack.Screen name="Home" component={HomeScreen} />
 
       {/* Chat avec IA A SUPPRIMER!!!!*/}
@@ -50,9 +48,9 @@ export default function AppNavigator() {
       {/* Mon Compte */}
       <Stack.Screen name="Compte" component={CompteScreen} />
 
-      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
 
-      <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
 
       {/* Shelves (étagère) */}
       <Stack.Screen name="Shelves" component={ShelvesScreen} />
@@ -76,12 +74,12 @@ export default function AppNavigator() {
         name="Chat"
         component={ChatScreen}
         options={{
-           presentation: "modal",
+          presentation: "modal",
           headerShown: false,
           animation: "slide_from_bottom",
           keyboardHandlingEnabled: false, // <-- Ajoute ça
           // behavior: "position", //ne pas effacer, indispensable pour KeyAvoindingView
-         }}
+        }}
       />
     </Stack.Navigator>
   );

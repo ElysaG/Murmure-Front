@@ -8,7 +8,7 @@ const InfoBubble = ({ message, visible, onClose }) => {
   console.log(`[InfoBubble] Rendu du composant. Visible: ${visible}, Message: "${message}"`);
 
   useEffect(() => {
-    console.log(`[InfoBubble] useEffect déclenché. État visible: ${visible}`);
+    // console.log(`[InfoBubble] useEffect déclenché. État visible: ${visible}`);
 
     if (visible) {
       console.log('[InfoBubble] 🟢 Condition TRUE : Démarrage animation apparition');
@@ -23,17 +23,17 @@ const InfoBubble = ({ message, visible, onClose }) => {
       // Auto-fermeture après 4 secondes
       console.log('[InfoBubble] ⏳ Démarrage du Timer (20s)');
       const timer = setTimeout(() => {
-        console.log('[InfoBubble] ⏰ Timer écoulé -> Appel de onClose()');
+        // console.log('[InfoBubble] ⏰ Timer écoulé -> Appel de onClose()');
         onClose();
       }, 20000);
 
       // Fonction de nettoyage
       return () => {
-        console.log('[InfoBubble]  Cleanup: Nettoyage du timer');
+        // console.log('[InfoBubble]  Cleanup: Nettoyage du timer');
         clearTimeout(timer);
       };
     } else {
-      console.log("[InfoBubble] l'infobulle disparait"),
+      // console.log("[InfoBubble] l'infobulle disparait"),
       
       Animated.timing(fadeAnim, {
         toValue: 0,
@@ -45,7 +45,7 @@ const InfoBubble = ({ message, visible, onClose }) => {
 
   // LOGIQUE CRITIQUE ICI
   if (!visible) {
-    console.log('[InfoBubble] ⛔ Erreur : Le composant ne s\'affiche pas');
+    console.log('[InfoBubble] ⛔ Erreur : Le composant ne s\'affiche pas . Rendu est "null".');
     return null;
   }
 
@@ -54,7 +54,7 @@ const InfoBubble = ({ message, visible, onClose }) => {
       <TouchableOpacity 
         style={styles.infoBubble}
         onPress={() => {
-            console.log('[InfoBubble]  Clic utilisateur sur X -> Fermeture de l\'infobulle');
+            //console.log('[InfoBubble]  Clic utilisateur sur X -> Fermeture de l\'infobulle');
             onClose();
         }}
         activeOpacity={0.9}
