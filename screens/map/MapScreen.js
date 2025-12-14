@@ -139,6 +139,6 @@ const styles = StyleSheet.create({
   btnBack: {
     position: "absolute",
     bottom: 40,
-    left: -150,
+    left: 20,
   },
 });
