@@ -14,12 +14,12 @@ import { View,
 import Button from "../../components/Button";
         
 // import pour les infobulles
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import InfoBubble from "../../components/InfoBulleHome";
+import AsyncStorage from '@react-native-async-storage/async-storage'; // pour le stockage local
+import InfoBubble from "../../components/InfoBulleHome"; // composant infobulle personnalisé
 
 
 // Obtenir les dimensions de l'écran pour l'exemple
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window'); // dimensions de l'écran utilisé pour positionner les boutons
 
 
 
@@ -59,33 +59,31 @@ const PulsingButton = ({ onPress, color, style }) => {
         const rippleColor = color || '#FF5722';
 
 
-  return ( // RETURN DES PULSING BUTTON
-    <View style={[styles.buttonWrapper, style]}>
-      
-      {/* L'anneau animé en arrière-plan */}
-        <Animated.View
-          style={[
-            styles.pulseRing,
-            {
-              backgroundColor: rippleColor,
-              // On applique les transformations calculées au-dessus
-              transform: [{ scale: scaleAnim }],
-              opacity: opacityAnim,
-            },
-          ]}
-        />
+    return ( // RETURN DES PULSING BUTTON
+      <View style={[styles.buttonWrapper, style]}>
+        
+        {/* L'anneau animé en arrière-plan */}
+          <Animated.View
+            style={[
+              styles.pulseRing,
+              {
+                backgroundColor: rippleColor,
+                // On applique les transformations calculées au-dessus
+                transform: [{ scale: scaleAnim }],
+                opacity: opacityAnim,
+              },
+            ]}
+          />
 
-      {/* Le bouton central cliquable */}
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={onPress}
-          style={[styles.buttonCenter, { backgroundColor: 'transparent' }]}
-        />
-    </View>
-  );
+        {/* Le bouton central cliquable */}
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={onPress}
+            style={[styles.buttonCenter, { backgroundColor: 'transparent' }]}
+          />
+      </View>
+    );
 };
-
-
 
 
 export default function HomeScreen({ navigation }) {
@@ -98,59 +96,68 @@ export default function HomeScreen({ navigation }) {
 
 
     useEffect(() => {
-      console.log('[HomeScreen -- Infobulle] 🚀 useEffect (Mount) -> Lancement de checkVisitCount');
+      // console.log('[HomeScreen -- Infobulle] 🚀 useEffect (Mount) -> Lancement de checkVisitCount');
       checkVisitCount();
     }, []);
 
-    const checkVisitCount = async () => {
-      try {
-        // console.log('[HomeScreen -- Infobulle] ⏳ Début lecture AsyncStorage...');
-        const visitCount = await AsyncStorage.getItem('visitCount');
-          console.log(`[HomeScreen -- Infobulle] Valeur brute récupérée du stockage: ${visitCount}`);
+    const checkVisitCount = () => {
+      // console.log('[HomeScreen -- Infobulle] ⏳ Début lecture AsyncStorage...');
+      
+      AsyncStorage.getItem('visitCount') // permet de recuperer le compteur de visites
+      // rappel. asyncStorage est une API de stockage local pour react native; similaire au localStorage du navigateur web.
+        .then((visitCount) => {
+          // console.log(`[HomeScreen -- Infobulle] Valeur brute récupérée du stockage: ${visitCount}`);
+          
+          const count = visitCount ? parseInt(visitCount) : 0; // ParseInt est une fonction JS qui convertit une chaine de caractères (string) en nombre entier
+          const newCount = count + 1; // a chaque visite on incrémente le compteur de 1.
+          
+          console.log(`[HomeScreen -- Infobulle] Calcul compteur: Ancien=${count} -> Nouveau=${newCount}`);
 
-        const count = visitCount ? parseInt(visitCount) : 0;
-        const newCount = count + 1;
-        
-          console.log(`[HomeScreen -- Infobulle]  Calcul compteur: Ancien=${count} -> Nouveau=${newCount}`);
-
-        await AsyncStorage.setItem('visitCount', newCount.toString());
-        // console.log('[HomeScreen -- Infobulle]  Nouveau compteur sauvegardé dans AsyncStorage');
-
-        if (newCount === 1) {
-            console.log('[HomeScreen -- Infobulle]  Condition: 1ère visite -> Mise à jour state "Bienvenue sur Murmure"');
-          setInfoBubble({ visible: true, message: "Bienvenue sur Murmure!\n\nSouhaitez vous me parler ou commencer votre parcours?\n\nJe vous invite à cliquer sur l'étagère ou la porte vers le jardin." });
-        
-        } else if (newCount >= 2) {
-            console.log('[HomeScreen -- Infobulle]  Condition: 2ème visite ou plus -> Mise à jour state "Ravi de vous revoir"');
-          setInfoBubble({ visible: true, message: "✨ Ravi de vous revoir! ✨\n\nComment allez-vous aujourd'hui?\n\nSouhaitez-vous continuer vers votre parcours ou initier une séance de relaxation?"});
-        }
-
-      } catch (error) {
+          return AsyncStorage.setItem('visitCount', newCount.toString()) //fonction toString() permet de convertir un nombre en chaîne de caractères => nécessaire car AsyncStorage ne stocke que des chaînes de caractères
+             .then(() => {
+              // console.log('[HomeScreen -- Infobulle] Nouveau compteur sauvegardé dans AsyncStorage');
+              
+              if (newCount === 1) { // condition pour la 1ère visite
+                // console.log('[HomeScreen -- Infobulle] Condition: 1ère visite -> Mise à jour state "Bienvenue sur Murmure"');
+                setInfoBubble({ 
+                  visible: true, 
+                  message: "Bienvenue sur Murmure!\n\nSouhaitez vous me parler ou commencer votre parcours?\n\nJe vous invite à cliquer sur l'étagère ou la porte vers le jardin.\n\n N'hésites pas à venir me parler!" 
+                });
+              
+              } else if (newCount >= 2) { // condition pour les visites suivantes
+                // console.log('[HomeScreen -- Infobulle] Condition: 2ème visite ou plus -> Mise à jour state "Ravi de vous revoir"');
+                setInfoBubble({ 
+                  visible: true, 
+                  message: "✨ Ravi de vous revoir! ✨\n\nComment allez-vous aujourd'hui?\n\nSouhaitez-vous continuer vers votre parcours ou initier une séance de relaxation?\n\nOu peut-être préférez-vous me parler?" 
+                });
+              }
+            });
+        })
+        .catch((error) => {
           console.error('[HomeScreen -- Infobulle] ❌ Erreur lors de la vérification des visites:', error);
-      }
+        });
     };
 
     const closeInfoBubble = () => {
-        console.log('[HomeScreen -- Infobulle] 🔇 Appel de closeInfoBubble -> Reset du state');
+        // console.log('[HomeScreen -- Infobulle] 🔇 Appel de closeInfoBubble -> Reset du state');
       setInfoBubble({ visible: false, message: '' });
     };
 
-    // FONCTION TEMPORAIRE DE TEST - À commenter plus tard
-    const resetVisitCount = async () => {
-      try {
-        await AsyncStorage.removeItem('visitCount');
+    // FONCTION TEMPORAIRE DE TEST - À commenter plus tard // sert à réinitialiser le compteur de visites
+    const resetVisitCount = () => {
+      AsyncStorage.removeItem('visitCount')
+        .then(() => {
           console.log('[HomeScreen -- Infobulle] 🔄 Compteur réinitialisé ! Rechargez la page pour tester.');
           Alert.alert('Compteur réinitialisé', 'Fermes et rouvres l\'écran pour voir la bulle de bienvenue.');
-      } catch (error) {
+        })
+        .catch((error) => {
           console.error('[HomeScreen -- Infobulle] ❌ Erreur lors de la réinitialisation:', error);
-      }
+        });
     };
-
-
 
     return (
       <ImageBackground style={styles.background}
-          source={require('../../assets/homescreen.png')}
+          source={require('../../assets/homescreen-2.png')}
           resizeMode="cover"
           >
     
@@ -176,7 +183,7 @@ export default function HomeScreen({ navigation }) {
                         }}
                     />
 
-                  {/* BOUTON TEMPORAIRE DE TEST - À commenter plus tard  */}
+                  {/* BOUTON TEMPORAIRE DE TEST POUR REINITIALISER LE COMPTEUR - À commenter plus tard  */}
                     <Button
                         label="Reset Bulle"
                         type="primary"
@@ -210,8 +217,9 @@ export default function HomeScreen({ navigation }) {
                         onPress={() => {
                           console.log("ok le lien vers chatscreen fonctionne!");
                           navigation.navigate("ChatScreen");
-                        }}
-                      >Ecris moi si tu veux me parler !</Text>
+                        }}>
+                        {/* Ecris moi si tu veux me parler ! */}
+                      </Text>
                     </View>  
                       
 
@@ -291,18 +299,18 @@ const styles = StyleSheet.create({
   //   color: "#224C4A",
   // },
 
-  messageia: {
-    position: "relative",
-    backgroundColor: "#D8F0E4",
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    marginTop: 0,
-    right: 140,
+  // messageia: {
+  //   position: "relative",
+  //   backgroundColor: "#D8F0E4",
+  //   paddingVertical: 20,
+  //   paddingHorizontal: 20,
+  //   borderRadius: 12,
+  //   marginTop: 0,
+  //   right: 140,
     // padding: 40,
     // width: '100%',
     // alignSelf: 'center ',
-  },
+  // },
 
 
   dialogueperroquet: {
@@ -370,13 +378,12 @@ const styles = StyleSheet.create({
   },
 
   pulsingEtagere: {
-    bottom: 300,    // Position depuis le bas
-    right: 130,      // Position depuis la gauche
+    bottom: 300,    
+    right: 130,     
   },
 
   pulsingCarte: {
-    bottom: 300,    // Position depuis le bas
-    left: 120,     // Position depuis la droite
+    bottom: 300,    
   },
 
 

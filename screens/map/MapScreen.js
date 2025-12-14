@@ -12,7 +12,7 @@ import Label from "../../components/Label";
 export default function MapScreen({ navigation }) {
   return (
     <ImageBackground style={styles.background}
-            source={require('../../assets/map.png')}
+            source={require('../../assets/mapscreen-2.png')}
             resizeMode="cover"
             
     >
