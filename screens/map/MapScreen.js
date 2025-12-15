@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
 
   perroquet: {
     position: "absolute",
-    top: 60,
+    top: 65,
     right: 20,
     width: 100,
     height: 100,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
 
   progressFill: {
     height: "100%",
-    backgroundColor: "#507C79", 
+    backgroundColor: "#507C79",
     borderRadius: 10,
   },
   progressText: {
