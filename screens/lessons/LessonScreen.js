@@ -109,19 +109,36 @@ export default function LessonScreen({ navigation, route }) {
   const chapterIndex = route?.params?.lessonNumber ?? 0;
   const chapter = chapters[chapterIndex] ? chapters[chapterIndex] : chapters[0];
 
-  function DisplayLesson() {
+  function DisplayContent(type) {
+    const isFlashcard = type === 'flashcard';
+    const title = isFlashcard ? chapter.flashcard.title : chapter.title;
+    const logo = chapter.logo;
+    const contentArray = isFlashcard
+      ? [
+          chapter.flashcard.definition,
+          chapter.flashcard.why,
+          chapter.flashcard.keyConcept,
+          chapter.flashcard.exemple,
+          chapter.flashcard.exercice,
+        ]
+      : [chapter.content];
+
     return (
       <>
         <View style={styles.title}>
-          <Text style={styles.titleText}>{chapter.title}</Text>
-          <Text style={styles.titleLogo}>{chapter.logo}</Text>
+          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.titleLogo}>{logo}</Text>
         </View>
         <View style={styles.scrollContainer}>
           <ScrollView
             style={styles.scrollView}
             contentContainerStyle={styles.scrollContent}
           >
-            <Text style={styles.contentText}>{chapter.content}</Text>
+            {contentArray.map((text, i) => (
+              <Text style={styles.contentText} key={i}>
+                {text}
+              </Text>
+            ))}
           </ScrollView>
 
           {/* Masque de dégradé Top */}
@@ -214,24 +231,6 @@ export default function LessonScreen({ navigation, route }) {
     );
   }
 
-  function DisplayFlashcard() {
-    return (
-      <>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>{chapter.flashcard.title}</Text>
-          <Text style={styles.titleLogo}>{chapter.logo}</Text>
-        </View>
-        <ScrollView style={styles.scrollView}>
-          <Text style={styles.contentText}>{chapter.flashcard.definition}</Text>
-          <Text style={styles.contentText}>{chapter.flashcard.why}</Text>
-          <Text style={styles.contentText}>{chapter.flashcard.keyConcept}</Text>
-          <Text style={styles.contentText}>{chapter.flashcard.exemple}</Text>
-          <Text style={styles.contentText}>{chapter.flashcard.exercice}</Text>
-        </ScrollView>
-      </>
-    );
-  }
-
   function handleNextButton() {
     switch (contentToDisplay) {
       case 'lesson':
@@ -269,13 +268,13 @@ export default function LessonScreen({ navigation, route }) {
         {(() => {
           switch (contentToDisplay) {
             case 'lesson':
-              return DisplayLesson();
+              return DisplayContent('lesson');
             case 'quiz':
               return DisplayQuiz();
             case 'quizResult':
               return DisplayQuizResult();
             case 'flashcard':
-              return DisplayFlashcard();
+              return DisplayContent('flashcard');
           }
         })()}
       </View>
