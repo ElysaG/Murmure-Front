@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -6,18 +6,18 @@ import {
   TouchableOpacity,
   Pressable,
   SafeAreaView,
-} from "react-native";
-import Button from "../../components/Button";
-import DurationSelector from "../../components/DurationSelector";
-import { useState } from "react";
-import ParrotChatBtn from "../../components/ParrotChatBtn";
-import { Ionicons } from "@expo/vector-icons";
+} from 'react-native';
+import Button from '../../components/Button';
+import DurationSelector from '../../components/DurationSelector';
+import { useState } from 'react';
+import ParrotChatBtn from '../../components/ParrotChatBtn';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function RespirationHomeScreen({ navigation }) {
   const [duration, setDuration] = useState(5);
 
   const startBreathing = () => {
-    navigation.navigate("RespirationCountdown", {
+    navigation.navigate('RespirationCountdown', {
       duration,
     });
   };
@@ -37,7 +37,7 @@ export default function RespirationHomeScreen({ navigation }) {
             {/* Perroquet : ouvre modale Chat */}
 
             <ParrotChatBtn
-              onPress={() => navigation.navigate("Chat")}
+              onPress={() => navigation.navigate('Chat')}
               style={styles.perroquet}
             />
           </View>
@@ -73,7 +73,7 @@ export default function RespirationHomeScreen({ navigation }) {
 
         <View style={styles.navigationContainer}>
           <Pressable
-            onPress={() => navigation.navigate("Shelves")}
+            onPress={() => navigation.goBack()}
             style={styles.backButton}
           >
             <Ionicons name="arrow-back" size={20} color="#224c4aff" />
@@ -93,7 +93,7 @@ export default function RespirationHomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#FAFAFA",
+    backgroundColor: '#FAFAFA',
   },
 
   container: {
@@ -106,38 +106,38 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 40,
     paddingBottom: 10,
-    positon: "relative",
-    alignSelf: "flex-start",
+    positon: 'relative',
+    alignSelf: 'flex-start',
   },
 
   messageBubble: {
-    backgroundColor: "#D8F0E4",
+    backgroundColor: '#D8F0E4',
     paddingVertical: 18,
     paddingHorizontal: 20,
     borderRadius: 18,
-    width: "100%",
-    position: "relative",
+    width: '100%',
+    position: 'relative',
     marginVertical: 20,
   },
 
   messageText: {
     fontSize: 15.5,
     lineHeight: 21,
-    fontWeight: "500",
-    color: "#224C4A",
+    fontWeight: '500',
+    color: '#224C4A',
   },
   bubblePic: {
-    position: "absolute",
+    position: 'absolute',
     width: 16,
     height: 16,
-    backgroundColor: "#D8F0E4",
+    backgroundColor: '#D8F0E4',
     bottom: -6,
     right: 80,
-    transform: [{ rotate: "45deg" }],
+    transform: [{ rotate: '45deg' }],
   },
 
   perroquet: {
-    position: "absolute",
+    position: 'absolute',
     right: -10,
     bottom: -100,
     // width: 100,
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   // body
   body: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingTop: 25,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -156,8 +156,8 @@ const styles = StyleSheet.create({
 
   label: {
     fontSize: 16,
-    fontWeight: "700",
-    color: "#224C4A",
+    fontWeight: '700',
+    color: '#224C4A',
     marginBottom: 10,
   },
 
@@ -166,50 +166,50 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingTop: 10,
     paddingBottom: 20,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
   },
 
   // footer
   navigationContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 40,
     left: 0,
     right: 0,
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
     gap: 40,
     zIndex: 10,
   },
 
   backButton: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
     paddingVertical: 12,
     paddingHorizontal: 18,
     borderRadius: 10,
-    backgroundColor: "#D8F0E4",
+    backgroundColor: '#D8F0E4',
   },
 
   backButtonText: {
-    color: "#224c4aff",
+    color: '#224c4aff',
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
 
   nextButton: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
     paddingVertical: 12,
     paddingHorizontal: 18,
     borderRadius: 10,
-    backgroundColor: "#507C79",
+    backgroundColor: '#507C79',
   },
 
   nextButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
 });

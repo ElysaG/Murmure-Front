@@ -90,7 +90,7 @@ export default function ShelvesScreen({ navigation }) {
         {/* MODIFICATION AVEC L'ACCORD DE BAT */}
  <View style={styles.navigationContainer}>
           <Pressable
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => navigation.goBack()}
             style={styles.backButton}
           >
             <Ionicons name="arrow-back" size={20} color="#224c4aff" />
