@@ -28,6 +28,8 @@ export default function FlashcardScreen({ navigation }) {
   const [chapterIndex, setChapterIndex] = useState(0);
 
   const [showExitPopup, setShowExitPopup] = useState(false); // popup sortie
+  const [showFlashcardLockedModal, setShowFlashcardLockedModal] =
+    useState(false);
 
   if (userToken) {
     console.log('token present');
@@ -56,6 +58,9 @@ export default function FlashcardScreen({ navigation }) {
               key={i}
               type="question"
               label={chap.title}
+              onPress={() => {
+                setShowFlashcardLockedModal(true);
+              }}
               style={{ backgroundColor: 'grey' }}
             />
           );
@@ -180,6 +185,13 @@ export default function FlashcardScreen({ navigation }) {
         message="Voulez-vous arrêter la leçon ?"
         onCancel={() => setShowExitPopup(false)}
         onConfirm={() => navigation.goBack()}
+      />
+
+      <ConfirmModal
+        visible={showFlashcardLockedModal}
+        message={`Vous n'avez pas encore debloquée cette flashcard`}
+        onConfirm={() => setShowFlashcardLockedModal(false)}
+        singleButton={true}
       />
     </View>
   );
