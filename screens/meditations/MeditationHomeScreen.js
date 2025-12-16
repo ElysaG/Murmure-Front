@@ -6,13 +6,16 @@ import {
   Pressable,
   SafeAreaView,
   Image,
+  Dimensions,
 } from "react-native";
 import DurationSelector from "../../components/DurationSelector";
 import Button from "../../components/Button";
 import { useState } from "react";
 import ParrotChatBtn from "../../components/ParrotChatBtn";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function MeditationHomeScreen({ navigation }) {
+  const { width, height } = Dimensions.get("window");
   // Récupération des states: theme de méditation, mode (guidée ou solo), duration
   const [theme, setTheme] = useState("anxiete");
   const [mode, setMode] = useState("guidee");
@@ -104,31 +107,46 @@ export default function MeditationHomeScreen({ navigation }) {
                 </Pressable>
               ))}
             </View>
-  </View>
-            {/* Choix de la durée avec composant de type Slider */}
-            <DurationSelector
-              mode={mode}
-              value={duration} // valeur actuelle
-              onChange={(value) => setDuration(value)} //permet de savoir
-            />
-        
+          </View>
+          {/* Choix de la durée avec composant de type Slider */}
+          <DurationSelector
+            mode={mode}
+            value={duration} // valeur actuelle
+            onChange={(value) => setDuration(value)} //permet de savoir
+          />
         </View>
 
         {/* Bouton démarrage */}
-        <View style={styles.footer}>
+        {/* <View style={styles.footer}>
           <Button
             onPress={startMeditation}
-            label="Démarrer méditation"
+            label="Suivant"
             type="primary"
             style={styles.startButton}
-          />
+          /> */}
 
-          {/* Bouton Précédent */}
-          <Button
+        {/* Bouton Précédent */}
+        {/* <Button
             onPress={() => navigation.navigate("Shelves")}
             type="back"
             style={styles.backButton}
           />
+        </View> */}
+
+        {/* Boutons de navigation */}
+        <View style={styles.navigationContainer}>
+          <Pressable
+            onPress={() => navigation.navigate("Shelves")}
+            style={styles.backButton}
+          >
+            <Ionicons name="arrow-back" size={20} color="#224c4aff" />
+            <Text style={styles.backButtonText}>Retour</Text>
+          </Pressable>
+
+          <Pressable onPress={startMeditation} style={styles.nextButton}>
+            <Text style={styles.nextButtonText}>Suivant</Text>
+            <Ionicons name="arrow-forward" size={20} color="#fff" />
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>
@@ -259,25 +277,46 @@ const styles = StyleSheet.create({
   },
 
   // footer
-  footer: {
-    marginTop: 10,
-    paddingTop: 10,
-    paddingBottom: 20,
-    justifyContent: "flex-end",
-  },
-
-  startButton: {
-    alignSelf: "center",
-    width: 300,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 30,
-  },
-
-  backBtn: {
+  navigationContainer: {
     position: "absolute",
-    bottom: 60,
-    left: 40,
-    zIndex: 20,
+    bottom: 40, // Distance du bas de l'écran
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 40,
+    zIndex: 10,
+  },
+
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    backgroundColor: "#D8F0E4",
+  },
+
+  backButtonText: {
+    color: "#224c4aff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  nextButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    backgroundColor: "#507C79",
+  },
+
+  nextButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

@@ -1,9 +1,17 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
+  SafeAreaView,
+} from "react-native";
 import Button from "../../components/Button";
 import DurationSelector from "../../components/DurationSelector";
 import { useState } from "react";
 import ParrotChatBtn from "../../components/ParrotChatBtn";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function RespirationHomeScreen({ navigation }) {
   const [duration, setDuration] = useState(5);
@@ -28,7 +36,7 @@ export default function RespirationHomeScreen({ navigation }) {
 
             {/* Perroquet : ouvre modale Chat */}
 
-                 <ParrotChatBtn
+            <ParrotChatBtn
               onPress={() => navigation.navigate("Chat")}
               style={styles.perroquet}
             />
@@ -47,20 +55,35 @@ export default function RespirationHomeScreen({ navigation }) {
         </View>
 
         {/* Bouton démarrage */}
-        <View style={styles.footer}>
+        {/* <View style={styles.footer}>
           <Button
             onPress={startBreathing}
-            label="Démarrer respiration"
+            label="Suivant"
             type="primary"
             style={styles.startButton}
-          />
+          /> */}
 
-          {/* Bouton Précédent */}
-          <Button
+        {/* Bouton Précédent */}
+        {/* <Button
             onPress={() => navigation.navigate("Shelves")}
             type="back"
             style={styles.backButton}
           />
+        </View> */}
+
+        <View style={styles.navigationContainer}>
+          <Pressable
+            onPress={() => navigation.navigate("Shelves")}
+            style={styles.backButton}
+          >
+            <Ionicons name="arrow-back" size={20} color="#224c4aff" />
+            <Text style={styles.backButtonText}>Retour</Text>
+          </Pressable>
+
+          <Pressable onPress={startBreathing} style={styles.nextButton}>
+            <Text style={styles.nextButtonText}>Suivant</Text>
+            <Ionicons name="arrow-forward" size={20} color="#fff" />
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>
@@ -83,7 +106,7 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 40,
     paddingBottom: 10,
-     positon: "relative",
+    positon: "relative",
     alignSelf: "flex-start",
   },
 
@@ -103,7 +126,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#224C4A",
   },
-bubblePic: {
+  bubblePic: {
     position: "absolute",
     width: 16,
     height: 16,
@@ -128,6 +151,7 @@ bubblePic: {
     justifyContent: "center",
     paddingTop: 25,
     paddingBottom: 20,
+    paddingHorizontal: 20,
   },
 
   label: {
@@ -145,15 +169,47 @@ bubblePic: {
     justifyContent: "flex-end",
   },
 
-  startButton: {
-    alignSelf: "center",
-    width: "80%",
+  // footer
+  navigationContainer: {
+    position: "absolute",
+    bottom: 40,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center",
+    gap: 40,
+    zIndex: 10,
   },
 
   backButton: {
-    marginTop: 12,
-    marginLeft: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    backgroundColor: "#D8F0E4",
+  },
+
+  backButtonText: {
+    color: "#224c4aff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  nextButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    backgroundColor: "#507C79",
+  },
+
+  nextButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

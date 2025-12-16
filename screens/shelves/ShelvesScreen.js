@@ -1,8 +1,19 @@
-import { View, Text, StyleSheet, ImageBackground, Animated, Dimensions, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Animated,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+  Pressable,
+} from "react-native";
 
 import React, { useEffect, useRef } from "react";
 import Button from "../../components/Button";
 import Label from "../../components/Label";
+import { Ionicons } from "@expo/vector-icons"; 
 
 // Obtenir les dimensions de l'écran pour l'exemple
 const { width, height } = Dimensions.get("window");
@@ -69,10 +80,26 @@ const PulsingButton = ({ onPress, color, style }) => {
 
 export default function ShelvesScreen({ navigation }) {
   return (
-    <ImageBackground style={styles.background} source={require("../../assets/etagereCoco.png")} resizeMode="cover">
-      <View style={styles.container}>
+    <ImageBackground
+      style={styles.background}
+      source={require("../../assets/etagereCoco.png")}
+      resizeMode="cover"
+    >
+
         {/* Bouton Précédent */}
-        <Button onPress={() => navigation.navigate("Home")} type="back" />
+        {/* MODIFICATION AVEC L'ACCORD DE BAT */}
+ <View style={styles.navigationContainer}>
+          <Pressable
+            onPress={() => navigation.navigate("Home")}
+            style={styles.backButton}
+          >
+            <Ionicons name="arrow-back" size={20} color="#224c4aff" />
+            <Text style={styles.backButtonText}>Retour</Text>
+          </Pressable>
+        </View>
+
+      <View style={styles.container}>
+
 
         {/* --- BOUTON  Meditatoin --- */}
         <PulsingButton
@@ -185,4 +212,33 @@ const styles = StyleSheet.create({
     bottom: 505,
     left: 50,
   },
+// Bouton Back
+ navigationContainer: {
+    position: 'absolute',
+    bottom: 40,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 30,
+    zIndex: 20, // Augmenté pour être au-dessus des PulsingButton (qui ont zIndex: 10)
+  },
+
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    backgroundColor: "#f1f7f4ff",
+  },
+
+  backButtonText: {
+    color: "#224c4aff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+
 });

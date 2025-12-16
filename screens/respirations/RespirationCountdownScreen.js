@@ -1,7 +1,14 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,ImageBackground,Pressable } from "react-native";
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ImageBackground,
+  Pressable,
+} from "react-native";
 import Button from "../../components/Button";
-
+import { Ionicons } from "@expo/vector-icons";
 import ConfirmModal from "../../components/ConfirmModal";
 import { useState, useEffect, useRef } from "react";
 import { Animated } from "react-native";
@@ -28,7 +35,7 @@ export default function RespirationCountdownScreen({ route, navigation }) {
 
   const scaleAnim = useRef(new Animated.Value(1)).current; //   Animation cercle= définition du cercleAnim
   const timeoutsVibrations = useRef([]); // timeouts des haptics
-
+  const [hasStarted, setHasStarted] = useState(false);
   // PRECHARGEMENT DE L'IMAGE BACKGROUND-----------------------------------
   useEffect(() => {
     // Fonction pour charger l'image
@@ -79,6 +86,7 @@ export default function RespirationCountdownScreen({ route, navigation }) {
     if (!isPlaying) return;
 
     // Démarre immédiatement l'animation et les haptics pour la phase actuelle
+    setHasStarted(true);
     animateBreathing(phase);
     startHaptics(phase);
 
@@ -239,16 +247,21 @@ export default function RespirationCountdownScreen({ route, navigation }) {
         )}
 
         {/* Bouton retour */}
-        <Button
-          type="back"
-          style={styles.backBtn}
-          onPress={() => {
-            if (isPlaying) {
-              return setShowExitPopup(true);
-            }
-            navigation.goBack();
-          }}
-        />
+        <View style={styles.navigationContainer}>
+          <Pressable
+            type="back"
+            style={styles.backButton}
+            onPress={() => {
+              if (isPlaying || hasStarted) {
+                return setShowExitPopup(true);
+              }
+              navigation.goBack();
+            }}
+          >
+            <Ionicons name="arrow-back" size={20} color="#224c4aff" />
+            <Text style={styles.backButtonText}>Retour</Text>
+          </Pressable>
+        </View>
 
         {/* Modale sortie avant la fin*/}
         <ConfirmModal
@@ -353,10 +366,36 @@ const styles = StyleSheet.create({
     color: "#224C4A",
   },
 
-  backBtn: {
+  // backBtn: {
+  //   position: "absolute",
+  //   bottom: 60,
+  //   left: 40,
+  //   zIndex: 20,
+  // },
+  navigationContainer: {
     position: "absolute",
-    bottom: 60,
-    left: 40,
+    bottom: 40,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 30,
     zIndex: 20,
+  },
+
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    backgroundColor: "#FFFFFF",
+  },
+
+  backButtonText: {
+    color: "#224c4aff",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

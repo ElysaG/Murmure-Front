@@ -24,13 +24,14 @@ export default function ConfirmModal({
           </Pressable>
         ) : (
           <View style={styles.buttons}>
+            <Pressable style={[styles.btn, styles.confirm]} onPress={onConfirm}>
+              <Text style={styles.btnText}>Arrêter</Text>
+            </Pressable>
+            
             <Pressable style={[styles.btn, styles.cancel]} onPress={onCancel}>
               <Text style={styles.btnText}>Continuer</Text>
             </Pressable>
 
-            <Pressable style={[styles.btn, styles.confirm]} onPress={onConfirm}>
-              <Text style={styles.btnText}>Arrêter</Text>
-            </Pressable>
           </View>
         )}
       </View>

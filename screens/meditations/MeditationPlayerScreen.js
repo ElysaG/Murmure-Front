@@ -6,6 +6,7 @@ import {
   ImageBackground,
   ActivityIndicator,
   Pressable,
+  Dimensions,
 } from "react-native";
 import { Audio } from "expo-av";
 import { useEffect, useState } from "react";
@@ -45,8 +46,10 @@ export default function MeditationPlayer({ route, navigation }) {
 
   // states du player meditation guidée
   const [errorNotFound, setErrorNotFound] = useState(false);
-
   // const safeNav = useNavigation(navigation);
+  
+  const [hasStarted, setHasStarted] = useState(false);
+
 
   // UseEffect du player méditation guidée, fetch au lancement du screen
   useEffect(() => {
@@ -166,6 +169,7 @@ export default function MeditationPlayer({ route, navigation }) {
       setIsPlaying(false);
       await sound.pauseAsync(); //met en pause
     } else {
+      setHasStarted(true);
       setIsPlaying(true);
       const status = await sound.playAsync(); //await lancement du player
       if (status.positionMillis === 0) {
@@ -191,6 +195,7 @@ export default function MeditationPlayer({ route, navigation }) {
   // MEDITATION SOLO
   //Démarrage du solo
   const startSolo = () => {
+    setHasStarted(true);
     setEcouleSolo(0);
     setIsSoloPlaying(true);
   };
@@ -293,11 +298,27 @@ export default function MeditationPlayer({ route, navigation }) {
       )}
 
       {/* <Button type="back" onPress={stopMeditation} /> */}
-      <Button
+      {/* <Button
         type="back"
         style={styles.backBtn}
         onPress={() => setShowExitPopup(true)}
-      />
+      /> */}
+
+      <View style={styles.navigationContainer}>
+        <Pressable
+          style={styles.backButton}
+          onPress={() => {
+            if (hasStarted) {
+              setShowExitPopup(true);
+            } else {
+              navigation.goBack();
+            }
+          }}
+        >
+          <Ionicons name="arrow-back" size={20} color="#224c4aff" />
+          <Text style={styles.backButtonText}>Retour</Text>
+        </Pressable>
+      </View>
 
       {/* Modale aucune méditation guidée avec ces choix trouvée */}
       <ConfirmModal
@@ -416,10 +437,31 @@ const styles = StyleSheet.create({
     fontSize: 42,
     color: "#507C79",
   },
-  backBtn: {
+
+  navigationContainer: {
     position: "absolute",
-    bottom: 60,
-    left: 40,
-    zIndex: 20,
+    bottom: 40,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 30,
+    zIndex: 10,
+  },
+
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    backgroundColor: "#D8F0E4",
+  },
+
+  backButtonText: {
+    color: "#224c4aff",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
