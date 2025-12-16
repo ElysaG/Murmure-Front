@@ -31,22 +31,36 @@ export default function FlashcardScreen({ navigation }) {
 
   if (userToken) {
     console.log('token present');
-    console.log(userProgress)
+    console.log(userProgress);
   }
 
   function DisplayList() {
     const flashcardButtons = chapters.map((chap, i) => {
-      return (
-        <Button
-          key={i}
-          onPress={() => {
-            setChapterIndex(i);
-            setContentToDisplay('flashcard');
-          }}
-          type="question"
-          label={chap.title}
-        />
-      );
+      {
+        if (i <= userProgress - 1) {
+          return (
+            <Button
+              key={i}
+              onPress={() => {
+                setChapterIndex(i);
+                setContentToDisplay('flashcard');
+              }}
+              type="question"
+              label={chap.title}
+            />
+          );
+        } else {
+          return (
+            <Button
+              disabled
+              key={i}
+              type="question"
+              label={chap.title}
+              style={{ backgroundColor: 'grey' }}
+            />
+          );
+        }
+      }
     });
 
     return (
@@ -102,29 +116,6 @@ export default function FlashcardScreen({ navigation }) {
   async function handleNextButton() {
     switch (contentToDisplay) {
       case 'flashcard':
-        // Mettre à jour progressNb
-        // if (userToken) {
-        //   try {
-        //     const response = await fetch(`${BACKEND_ADDRESS}/users/progress`, {
-        //       method: 'PUT',
-        //       headers: {
-        //         'Content-Type': 'application/json',
-        //       },
-        //       body: JSON.stringify({
-        //         progressNb: chapter.index,
-        //         token: userToken,
-        //       }),
-        //     });
-        //     const data = await response.json();
-        //     if (data.result) {
-        //       console.log('progressNb updated to:', chapter.index);
-        //     } else {
-        //       console.log('Error updating progressNb:', data.error);
-        //     }
-        //   } catch (error) {
-        //     console.log('Fetch error updating progressNb:', error);
-        //   }
-        // }
         navigation.navigate('Shelves');
         break;
     }
