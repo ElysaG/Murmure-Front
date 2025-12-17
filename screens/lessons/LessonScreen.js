@@ -1,13 +1,6 @@
 import { BACKEND_ADDRESS } from '../../config';
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
@@ -60,10 +53,7 @@ export default function LessonScreen({ navigation, route }) {
           <Text style={styles.titleLogo}>{logo}</Text>
         </View>
         <View style={styles.scrollContainer}>
-          <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
-          >
+          <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
             {contentArray.map((text, i) => (
               <Text style={styles.contentText} key={i}>
                 {text}
@@ -99,25 +89,14 @@ export default function LessonScreen({ navigation, route }) {
         : setQuizQuestionIndex(quizQuestionIndex + 1);
     }
 
-    const quizButtons = chapter.quiz.questions[quizQuestionIndex].answers.map(
-      (e, i) => {
-        return (
-          <Button
-            key={i}
-            onPress={() => handleQuestionChoice(quizQuestionIndex, i)}
-            type="question"
-            label={e}
-          />
-        );
-      }
-    );
+    const quizButtons = chapter.quiz.questions[quizQuestionIndex].answers.map((e, i) => {
+      return <Button key={i} onPress={() => handleQuestionChoice(quizQuestionIndex, i)} type="question" label={e} />;
+    });
 
     return (
       <>
         <View style={styles.title}>
-          <Text style={styles.titleQuestion}>
-            {chapter.quiz.questions[quizQuestionIndex].question}
-          </Text>
+          <Text style={styles.titleQuestion}>{chapter.quiz.questions[quizQuestionIndex].question}</Text>
         </View>
         <View style={styles.questionContainer}>{quizButtons}</View>
       </>
@@ -132,10 +111,7 @@ export default function LessonScreen({ navigation, route }) {
       }
 
       // create an object with frequency of answer selection
-      const counts2 = arr.reduce(
-        (acc, val) => ((acc[val] = (acc[val] || 0) + 1), acc),
-        {}
-      );
+      const counts2 = arr.reduce((acc, val) => ((acc[val] = (acc[val] || 0) + 1), acc), {});
 
       // get the most frequent value of each key
       const maxFrequency = Math.max(...Object.values(counts));
@@ -194,7 +170,7 @@ export default function LessonScreen({ navigation, route }) {
             console.log('Fetch error updating progressNb:', error);
           }
         }
-        navigation.navigate('Map');
+        navigation.goBack();
         break;
     }
   }
@@ -216,12 +192,7 @@ export default function LessonScreen({ navigation, route }) {
       </TouchableOpacity>
 
       {/* contentContainer: Top + marginTop dynamic en fonction de l'inset.top */}
-      <View
-        style={[
-          styles.contentContainer,
-          { marginTop: Math.max(insets.top + 120, 20) },
-        ]}
-      >
+      <View style={[styles.contentContainer, { marginTop: Math.max(insets.top + 120, 20) }]}>
         {(() => {
           switch (contentToDisplay) {
             case 'lesson':
@@ -237,9 +208,7 @@ export default function LessonScreen({ navigation, route }) {
       </View>
 
       {/* buttonContainer: marginBottom dynamic en fonction de l'inset.bottom */}
-      <View
-        style={[styles.buttonContainer, { marginBottom: 20 + insets.bottom }]}
-      >
+      <View style={[styles.buttonContainer, { marginBottom: 20 + insets.bottom }]}>
         <Button
           style={{ width: 110 }}
           onPress={() => {
@@ -250,12 +219,7 @@ export default function LessonScreen({ navigation, route }) {
           label="Quitter"
         />
         {contentToDisplay !== 'quiz' ? (
-          <Button
-            style={{ width: 110 }}
-            onPress={() => handleNextButton()}
-            type="primary"
-            label="Suivant"
-          />
+          <Button style={{ width: 110 }} onPress={() => handleNextButton()} type="primary" label="Suivant" />
         ) : (
           <Button style={{ backgroundColor: '', width: 110 }} />
         )}
@@ -277,7 +241,7 @@ const styles = StyleSheet.create({
   // style for the global screen, coco positioning, contentContainer, buttons
   mainContainer: {
     flex: 1,
-    backgroundColor: '#95BE96',
+    backgroundColor: '#CFE5CF',
     position: 'relative', //needed for "coco position:absolute" to work
   },
   coco: {

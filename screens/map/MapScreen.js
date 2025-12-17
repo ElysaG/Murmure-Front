@@ -1,4 +1,3 @@
-import { BACKEND_ADDRESS } from '../../config';
 
 import {
   View,
@@ -6,7 +5,6 @@ import {
   StyleSheet,
   ImageBackground,
   Image,
-  TouchableOpacity,
   Pressable
 } from 'react-native';
 
@@ -15,8 +13,6 @@ import Label from '../../components/Label';
 import ParrotChatBtn from '../../components/ParrotChatBtn';
 import { useState, useEffect } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { setAllChapters } from '../../reducers/chapters';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -24,17 +20,6 @@ export default function MapScreen({ navigation }) {
   const [progress, setProgress] = useState(1); // valeur initiale 1
   const TOTAL_LESSONS = 6;
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    fetch(`${BACKEND_ADDRESS}/chapters/`)
-      .then((res) => res.json())
-      .then((data) => {
-        //console.log(data.chapters);
-        dispatch(setAllChapters(data.chapters));
-        console.log("dispatched chapters")
-      });
-  }, []);
 
   // --> Au démarrage dans un use Effect on récupérer la valeur du progress et on fait setProgress(nbreçu)
 

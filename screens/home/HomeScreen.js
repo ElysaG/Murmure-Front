@@ -1,3 +1,5 @@
+import { BACKEND_ADDRESS } from '../../config';
+
 import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
@@ -10,7 +12,9 @@ import {
   Dimensions,
   Pressable,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setAllChapters } from '../../reducers/chapters';
 
 import Button from '../../components/Button';
 import ParrotChatBtn from '../../components/ParrotChatBtn';
@@ -85,9 +89,7 @@ const PulsingButton = ({ onPress, color, style }) => {
 
 export default function HomeScreen({ navigation }) {
   // Récupérer le statut de connexion depuis Redux
-  const { isConnected, username } = useSelector(
-    (state) => state.userConnection
-  );
+  const { isConnected, username } = useSelector((state) => state.userConnection);
 
   // integration de l'infobulle
   const [infoBubble, setInfoBubble] = useState({ visible: false, message: '' });
@@ -100,6 +102,24 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     // console.log('[HomeScreen -- Infobulle] 🚀 useEffect (Mount) -> Lancement de checkVisitCount');
     checkVisitCount();
+  }, []);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetch(`${BACKEND_ADDRESS}/chapters/`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.chapters && data.chapters.length > 0) {
+          console.log('✅ Data received from backend');
+          dispatch(setAllChapters(data.chapters));
+        } else {
+          console.log('⚠️ Backend empty, loading chaptersSafe');
+        }
+      })
+      .catch((err) => {
+        console.log('❌ Fetch error, loading chaptersSafe', err);
+      });
   }, []);
 
   // NOUVEAU CODE - Basé sur le statut de connexion de l'utilisateur
@@ -135,10 +155,7 @@ export default function HomeScreen({ navigation }) {
       })
       .catch((error) => {
         // Gestion des erreurs
-        console.error(
-          '[HomeScreen -- Infobulle] ❌ Erreur lors de la vérification:',
-          error
-        );
+        console.error('[HomeScreen -- Infobulle] ❌ Erreur lors de la vérification:', error);
       });
   };
 
@@ -148,18 +165,10 @@ export default function HomeScreen({ navigation }) {
   };
 
   return (
-    <ImageBackground
-      style={styles.background}
-      source={require('../../assets/homescreen.png')}
-      resizeMode="cover"
-    >
+    <ImageBackground style={styles.background} source={require('../../assets/homescreen.png')} resizeMode="cover">
       <View style={styles.container}>
         {/* Bulle d'information */}
-        <InfoBubble
-          message={infoBubble.message}
-          visible={infoBubble.visible}
-          onClose={closeInfoBubble}
-        />
+        <InfoBubble message={infoBubble.message} visible={infoBubble.visible} onClose={closeInfoBubble} />
 
         <View style={styles.labelContainer}>
           {/* Bouton Mon Compte en haut à gauche */}
@@ -195,10 +204,7 @@ export default function HomeScreen({ navigation }) {
                   navigation.navigate('Chat');
                 }}
               >
-                <Image
-                  source={require('../../assets/chat/perroquet.png')}
-                  style={styles.perroquet}
-                />
+                <Image source={require('../../assets/chat/perroquet.png')} style={styles.perroquet} />
               </Pressable>
             </View>
           </View>
