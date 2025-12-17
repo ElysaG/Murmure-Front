@@ -5,11 +5,13 @@ import {
   TextInput,
   StyleSheet,
   ImageBackground,
+  Pressable
 } from 'react-native';
 import { useState } from 'react';
 import Button from '../../components/Button';
 import ConfirmModal from '../../components/ConfirmModal';
 import { BACKEND_ADDRESS } from '../../config';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SignUpScreen({ navigation }) {
   const [username, setUsername] = useState('');
@@ -95,11 +97,14 @@ export default function SignUpScreen({ navigation }) {
             />
           </View>
 
-          <Button
-            type="back"
-            onPress={() => navigation.navigate('Home')}
-            style={styles.backButton}
-          />
+{/* Bouton retour */}
+               <View style={styles.navigationContainer}>
+            <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={20} color="#224c4aff" />
+              <Text style={styles.backButtonText}>Retour</Text>
+            </Pressable>
+                      </View>
+
 
           <ConfirmModal
             visible={showSuccessModal}
@@ -157,9 +162,33 @@ const styles = StyleSheet.create({
   submitButton: {
     marginTop: 40,
   },
-  backButton: {
+  // Retour
+  navigationContainer: {
     position: 'absolute',
-    top: 40,
-    left: 20,
+    bottom: 40,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent:"center",
+    paddingHorizontal: 30,
+    zIndex: 10,
+  },
+
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    borderWidth: 1,    
+    borderColor:"#224c4aae",
+    backgroundColor: "#fbf3ed9e",
+  },
+
+  backButtonText: {
+    color: '#224c4aff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

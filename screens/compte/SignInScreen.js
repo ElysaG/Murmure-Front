@@ -1,35 +1,35 @@
-import { SafeAreaView, View, Text, TextInput, StyleSheet, ImageBackground } from "react-native";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "../../reducers/userConnection";
-import Button from "../../components/Button";
-import ConfirmModal from "../../components/ConfirmModal";
-import { BACKEND_ADDRESS } from "../../config";
+import { SafeAreaView, View, Text, TextInput, StyleSheet, ImageBackground, Pressable } from 'react-native';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { login } from '../../reducers/userConnection';
+import Button from '../../components/Button';
+import ConfirmModal from '../../components/ConfirmModal';
+import { BACKEND_ADDRESS } from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SignInScreen({ navigation }) {
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
-  const [welcomeUsername, setWelcomeUsername] = useState("");
+  const [welcomeUsername, setWelcomeUsername] = useState('');
 
   const handleSignIn = () => {
     if (!email.trim() || !password.trim()) {
-      alert("Veuillez remplir tous les champs");
+      alert('Veuillez remplir tous les champs');
       return;
     }
 
     fetch(`${BACKEND_ADDRESS}/users/signin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.result) {
-
           // Sauvegarder dans Redux
           dispatch(
             login({
@@ -51,18 +51,18 @@ export default function SignInScreen({ navigation }) {
           setWelcomeUsername(data.username);
           setShowWelcomeModal(true);
         } else {
-          alert(data.error || "Identifiants incorrects");
+          alert(data.error || 'Identifiants incorrects');
         }
       })
       .catch((error) => {
-        console.error("Erreur signin:", error);
+        console.error('Erreur signin:', error);
         alert(`Impossible de se connecter. Détails: ${error.message}`);
       });
   };
 
   const handleWelcomeConfirm = () => {
     setShowWelcomeModal(false);
-    navigation.navigate("Home");
+    navigation.navigate('Home');
   };
 
   return (
@@ -96,19 +96,16 @@ export default function SignInScreen({ navigation }) {
               autoCapitalize="none"
             />
 
-            <Button
-              label="Se connecter"
-              type="primary"
-              onPress={handleSignIn}
-              style={styles.submitButton}
-            />
+            <Button label="Se connecter" type="primary" onPress={handleSignIn} style={styles.submitButton} />
           </View>
 
-          <Button
-            type="back"
-            onPress={() => navigation.navigate("Home")}
-            style={styles.backButton}
-          />
+{/* Bouton retour */}
+          <View style={styles.navigationContainer}>
+            <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={20} color="#224c4aff" />
+              <Text style={styles.backButtonText}>Retour</Text>
+            </Pressable>
+          </View>
 
           <ConfirmModal
             visible={showWelcomeModal}
@@ -130,7 +127,7 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
   },
   container: {
     flex: 1,
@@ -139,36 +136,60 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: "600",
-    color: "#224C4A",
+    fontWeight: '600',
+    color: '#224C4A',
     marginBottom: 40,
-    textAlign: "center",
+    textAlign: 'center',
   },
   form: {
     flex: 1,
   },
   label: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#224C4A",
+    fontWeight: '600',
+    color: '#224C4A',
     marginBottom: 8,
     marginTop: 20,
   },
   input: {
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
     borderWidth: 1,
-    borderColor: "#507C79",
+    borderColor: '#507C79',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    color: "#224C4A",
+    color: '#224C4A',
   },
   submitButton: {
     marginTop: 40,
   },
+  // Retour
+  navigationContainer: {
+    position: 'absolute',
+    bottom: 40,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingHorizontal: 30,
+    zIndex: 10,
+  },
+
   backButton: {
-    position: "absolute",
-    top: 40,
-    left: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#224c4aae',
+    backgroundColor: '#fbf3ed9e',
+  },
+
+  backButtonText: {
+    color: '#224c4aff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

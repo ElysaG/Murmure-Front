@@ -19,7 +19,7 @@ import { useFocusEffect } from '@react-navigation/native'; // Pour gérer le foc
 
 // import pour les infobulles
 import InfoBubble from '../../components/InfoBulleHome'; // composant infobulle personnalisé
-
+import { setAllChapters } from '../../reducers/chapters';
 // --- 1. HOOK DE POSITIONNEMENT AMÉLIORÉ --- // Permet de positionner des éléments de façon responsive sur une image
 
 const useResponsiveImagePosition = (imageSource) => {
