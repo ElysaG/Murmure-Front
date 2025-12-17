@@ -1,19 +1,13 @@
 import { BACKEND_ADDRESS } from '../../config';
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 
 import ConfirmModal from '../../components/ConfirmModal';
 import Button from '../../components/Button';
+import ParrotChatBtn from '../../components/ParrotChatBtn'; // Bouton perroquet pour chat
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -63,10 +57,7 @@ export default function LessonScreen({ navigation, route }) {
           <Text style={styles.titleLogo}>{logo}</Text>
         </View>
         <View style={styles.scrollContainer}>
-          <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
-          >
+          <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
             {contentArray.map((text, i) => (
               <Text style={styles.contentText} key={i}>
                 {text}
@@ -102,25 +93,14 @@ export default function LessonScreen({ navigation, route }) {
         : setQuizQuestionIndex(quizQuestionIndex + 1);
     }
 
-    const quizButtons = chapter.quiz.questions[quizQuestionIndex].answers.map(
-      (e, i) => {
-        return (
-          <Button
-            key={i}
-            onPress={() => handleQuestionChoice(quizQuestionIndex, i)}
-            type="question"
-            label={e}
-          />
-        );
-      }
-    );
+    const quizButtons = chapter.quiz.questions[quizQuestionIndex].answers.map((e, i) => {
+      return <Button key={i} onPress={() => handleQuestionChoice(quizQuestionIndex, i)} type="question" label={e} />;
+    });
 
     return (
       <>
         <View style={styles.title}>
-          <Text style={styles.titleQuestion}>
-            {chapter.quiz.questions[quizQuestionIndex].question}
-          </Text>
+          <Text style={styles.titleQuestion}>{chapter.quiz.questions[quizQuestionIndex].question}</Text>
         </View>
         <View style={styles.questionContainer}>{quizButtons}</View>
       </>
@@ -135,10 +115,7 @@ export default function LessonScreen({ navigation, route }) {
       }
 
       // create an object with frequency of answer selection
-      const counts2 = arr.reduce(
-        (acc, val) => ((acc[val] = (acc[val] || 0) + 1), acc),
-        {}
-      );
+      const counts2 = arr.reduce((acc, val) => ((acc[val] = (acc[val] || 0) + 1), acc), {});
 
       // get the most frequent value of each key
       const maxFrequency = Math.max(...Object.values(counts));
@@ -201,7 +178,7 @@ export default function LessonScreen({ navigation, route }) {
             console.log('Fetch error updating progressNb:', error);
           }
         }
-        navigation.navigate('Map');
+        navigation.goBack();
         break;
     }
   }
@@ -209,26 +186,22 @@ export default function LessonScreen({ navigation, route }) {
   return (
     <View style={styles.mainContainer}>
       {/* Coco */}
-      <TouchableOpacity
+      <ParrotChatBtn
         onPress={() => {
-          setExitBehavior(() => () => navigation.pop(2));
-          setShowExitPopup(true);
+          navigation.navigate('Chat');
         }}
-        style={[styles.coco, { top: Math.max(insets.top, 20) }]}
-      >
-        <Image
-          source={require('../../assets/coco.png')}
-          style={{ width: 130, height: 130, transform: [{ scaleX: -1 }] }}
-        />
-      </TouchableOpacity>
+        size={130}
+        style={[
+          styles.coco,
+          {
+            transform: [{ scaleX: -1 }],
+            top: Math.max(insets.top, 20),
+          },
+        ]}
+      />
 
       {/* contentContainer: Top + marginTop dynamic en fonction de l'inset.top */}
-      <View
-        style={[
-          styles.contentContainer,
-          { marginTop: Math.max(insets.top + 120, 20) },
-        ]}
-      >
+      <View style={[styles.contentContainer, { marginTop: Math.max(insets.top + 120, 20) }]}>
         {(() => {
           switch (contentToDisplay) {
             case 'lesson':
@@ -244,9 +217,7 @@ export default function LessonScreen({ navigation, route }) {
       </View>
 
       {/* buttonContainer: marginBottom dynamic en fonction de l'inset.bottom */}
-      <View
-        style={[styles.buttonContainer, { marginBottom: 20 + insets.bottom }]}
-      >
+      <View style={[styles.buttonContainer, { marginBottom: 20 + insets.bottom }]}>
         <Button
           style={{ width: 110 }}
           onPress={() => {
@@ -257,12 +228,7 @@ export default function LessonScreen({ navigation, route }) {
           label="Quitter"
         />
         {contentToDisplay !== 'quiz' ? (
-          <Button
-            style={{ width: 110 }}
-            onPress={() => handleNextButton()}
-            type="primary"
-            label="Suivant"
-          />
+          <Button style={{ width: 110 }} onPress={() => handleNextButton()} type="primary" label="Suivant" />
         ) : (
           <Button style={{ backgroundColor: '', width: 110 }} />
         )}
@@ -294,14 +260,12 @@ const styles = StyleSheet.create({
   // style for the global screen, coco positioning, contentContainer, buttons
   mainContainer: {
     flex: 1,
-    backgroundColor: '#95BE96',
+    backgroundColor: '#CFE5CF',
     position: 'relative', //needed for "coco position:absolute" to work
   },
   coco: {
     position: 'absolute', //needed to put coco where we want in the main container. Defaut position behavior top: 0
     right: '10%', //place it 10% to the right of the screen
-    width: 130,
-    height: 130,
     zIndex: 2, // This define the priority of the image (2 > 1 so image is in front of contentContainer)
   },
   contentContainer: {

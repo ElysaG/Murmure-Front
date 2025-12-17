@@ -28,12 +28,12 @@ export default function App() {
         // 2. Charger les images ici
         await Asset.loadAsync([
           require('./assets/paysage-bienvenue.png'),
-          require('./assets/homescreen.png'),
           require('./assets/etagereCoco.png'),
           require('./assets/perroquet.png'),
           require('./assets/map.png'),
           require('./assets/meditation/meditation.png'),
           require('./assets/meditation/meditationBkg.png'),
+          require('./assets/homescreenCadre.png'),
         ]);
         // console.log("--- [App.js] 2. Image chargées en memoire ---");
 
@@ -52,7 +52,7 @@ export default function App() {
   // 4. Cette fonction s'exécute dès que la View principale est affichée
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      console.log("--- [App.js] 5. App prête, on cache le Splash Screen natif --- Apparition de l'ecran choisi ---");
+      // console.log("--- [App.js] 5. App prête, on cache le Splash Screen natif --- Apparition de l'ecran choisi ---");
       await SplashScreen.hideAsync();
     }
   }, [appIsReady]);

@@ -5,6 +5,9 @@ import {
   TextInput,
   StyleSheet,
   ImageBackground,
+  Pressable,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -12,6 +15,7 @@ import { login } from '../../reducers/userConnection';
 import Button from '../../components/Button';
 import ConfirmModal from '../../components/ConfirmModal';
 import { BACKEND_ADDRESS } from '../../config';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SignInScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -35,6 +39,7 @@ export default function SignInScreen({ navigation }) {
       .then((res) => res.json())
       .then((data) => {
         if (data.result) {
+          // Sauvegarder dans Redux
           dispatch(
             login({
               username: data.username,
@@ -66,6 +71,8 @@ export default function SignInScreen({ navigation }) {
       style={styles.background}
       resizeMode="cover"
     >
+       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        {/* Ajout du TouchableWithoutFeedBack pour pouvoir avoir le boutn retour en bas sinon masqué par le clavier persistant */}
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <Text style={styles.title}>Connexion</Text>
@@ -91,19 +98,16 @@ export default function SignInScreen({ navigation }) {
               autoCapitalize="none"
             />
 
-            <Button
-              label="Se connecter"
-              type="primary"
-              onPress={handleSignIn}
-              style={styles.submitButton}
-            />
+            <Button label="Se connecter" type="primary" onPress={handleSignIn} style={styles.submitButton} />
           </View>
 
-          <Button
-            type="back"
-            onPress={() => navigation.navigate('Home')}
-            style={styles.backButton}
-          />
+          {/* Bouton retour */}
+          <View style={styles.navigationContainer}>
+            <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={20} color="#224c4aff" />
+              <Text style={styles.backButtonText}>Retour</Text>
+            </Pressable>
+          </View>
 
           <ConfirmModal
             visible={showWelcomeModal}
@@ -113,6 +117,7 @@ export default function SignInScreen({ navigation }) {
           />
         </View>
       </SafeAreaView>
+      </TouchableWithoutFeedback>
     </ImageBackground>
   );
 }
@@ -161,9 +166,33 @@ const styles = StyleSheet.create({
   submitButton: {
     marginTop: 40,
   },
-  backButton: {
+  // Retour
+  navigationContainer: {
     position: 'absolute',
-    top: 40,
-    left: 20,
+    bottom: 40,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingHorizontal: 30,
+    zIndex: 10,
+  },
+
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#224c4aae',
+    backgroundColor: '#fbf3ed9e',
+  },
+
+  backButtonText: {
+    color: '#224c4aff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
