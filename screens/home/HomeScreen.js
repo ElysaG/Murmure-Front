@@ -176,9 +176,9 @@ export default function HomeScreen({ navigation }) {
 
   // --- DÉFINITION DES POSITIONS EN POURCENTAGES ---
 
-  const posEtagere = getPos(originalW * -0.20, originalH * 0.55);                   // PULSING BUTTON ÉTAGÈRE
-  const posCarte = getPos(originalW * 0.36, originalH * 0.55);                      // PULSING BUTTON CARTE
-  const posPerroquet = getPos(originalW * 0.42, originalH * 0.195);                 // POSITION PERROQUET CHAT
+  const posEtagere = getPos(originalW * -0.20, originalH * 0.50);                   // PULSING BUTTON ÉTAGÈRE
+  const posCarte = getPos(originalW * 0.36, originalH * 0.50);                      // PULSING BUTTON CARTE
+  const posPerroquet = getPos(originalW * 0.42, originalH * 0.128);                 // POSITION PERROQUET CHAT
                
 
   const { isConnected, username } = useSelector((state) => state.userConnection);   // Récupérer le statut de connexion depuis Redux
@@ -272,7 +272,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <ImageBackground style={styles.background} source={require('../../assets/homescreenCadre.png')} resizeMode="cover">
-      <View style={styles.container}>
+      <View style={[styles.container, { top: Math.max(insets.top - 16, 10)}]}>
         {/* Bulle d'information */}
         <InfoBubble message={infoBubble.message} visible={infoBubble.visible} onClose={closeInfoBubble} />
 
@@ -281,7 +281,7 @@ export default function HomeScreen({ navigation }) {
           <Button
             label={isConnected ? 'Mon compte' : 'Se Connecter'}                                // Texte dynamique basé sur le redux
             type="primary"
-            style={[styles.compteButton, { top: Math.max(insets.top - 16, 10), right: 50 }]}   // Position adaptative : 31px sur notch, min 10px sur anciens iPhone
+            style={[styles.compteButton]}   // Position adaptative : 31px sur notch, min 10px sur anciens iPhone
             onPress={() => {
               // console.log("ok le btn mon compte fonctionne!");
               navigation.navigate('Compte');

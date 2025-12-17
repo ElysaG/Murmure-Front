@@ -5,7 +5,7 @@ import WelcomeScreen from '../screens/home/WelcomeScreen';
 
 import HomeScreen from '../screens/home/HomeScreen';
 
-import CompteScreen from '../screens/compte/compteScreen';
+import CompteScreen from '../screens/compte/CompteScreen';
 
 import ShelvesScreen from '../screens/shelves/ShelvesScreen';
 
@@ -36,7 +36,7 @@ const Stack = createNativeStackNavigator();
 export default function AppNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="Shelves" //Ici chacun met le nom de son screen, comme ça qd on lance expoGo on arrive dessus. A la fin, on mettre "WelcomeScreen"
+      initialRouteName="WelcomeScreen" //Ici chacun met le nom de son screen, comme ça qd on lance expoGo on arrive dessus. A la fin, on mettre "WelcomeScreen"
       screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
     >
       {/* Page de bienvenue paysage */}
@@ -48,17 +48,9 @@ export default function AppNavigator() {
       {/* Mon Compte */}
       <Stack.Screen name="Compte" component={CompteScreen} />
 
-      <Stack.Screen
-        name="SignUp"
-        component={SignUpScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
 
-      <Stack.Screen
-        name="SignIn"
-        component={SignInScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
 
       {/* Shelves (étagère) */}
       <Stack.Screen name="Shelves" component={ShelvesScreen} />
@@ -74,17 +66,11 @@ export default function AppNavigator() {
 
       {/* Meditation */}
       <Stack.Screen name="MeditationHome" component={MeditationHomeScreen} />
-      <Stack.Screen
-        name="MeditationPlayer"
-        component={MeditationPlayerScreen}
-      />
+      <Stack.Screen name="MeditationPlayer" component={MeditationPlayerScreen} />
 
       {/* Respiration */}
       <Stack.Screen name="RespirationHome" component={RespirationHomeScreen} />
-      <Stack.Screen
-        name="RespirationCountdown"
-        component={RespirationCountdownScreen}
-      />
+      <Stack.Screen name="RespirationCountdown" component={RespirationCountdownScreen} />
 
       {/* Chat affiché en modale, depuis le bas*/}
       <Stack.Screen
