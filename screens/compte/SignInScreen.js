@@ -1,4 +1,14 @@
-import { SafeAreaView, View, Text, TextInput, StyleSheet, ImageBackground, Pressable } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ImageBackground,
+  Pressable,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../reducers/userConnection';
@@ -71,6 +81,8 @@ export default function SignInScreen({ navigation }) {
       style={styles.background}
       resizeMode="cover"
     >
+       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        {/* Ajout du TouchableWithoutFeedBack pour pouvoir avoir le boutn retour en bas sinon masqué par le clavier persistant */}
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <Text style={styles.title}>Connexion</Text>
@@ -99,7 +111,7 @@ export default function SignInScreen({ navigation }) {
             <Button label="Se connecter" type="primary" onPress={handleSignIn} style={styles.submitButton} />
           </View>
 
-{/* Bouton retour */}
+          {/* Bouton retour */}
           <View style={styles.navigationContainer}>
             <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
               <Ionicons name="arrow-back" size={20} color="#224c4aff" />
@@ -115,6 +127,7 @@ export default function SignInScreen({ navigation }) {
           />
         </View>
       </SafeAreaView>
+      </TouchableWithoutFeedback>
     </ImageBackground>
   );
 }
