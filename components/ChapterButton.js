@@ -4,12 +4,12 @@ export default function ChapterButton({
   chapterNumber,
   progressNb,
   onPress,
-  style
+  style,
 }) {
-  // Choix de l'image selon le progressNb
-  const imageSource = chapterNumber <= progressNb
-    ? require('../assets/feudebois.png')
-    : require('../assets/feusansfeu.png');
+  const imageSource =
+    chapterNumber <= progressNb
+      ? require('../assets/feudebois.png')
+      : require('../assets/feusansfeu.png');
 
   return (
     <Pressable
@@ -17,16 +17,15 @@ export default function ChapterButton({
       style={({ pressed }) => [
         styles.container,
         style,
-        pressed && styles.pressed
+        pressed && styles.pressed,
       ]}
     >
-      <Image
-        source={imageSource}
-        style={styles.image}
-      />
-      <Text style={styles.label}>
-        Chapitre {chapterNumber}
-      </Text>
+      <Image source={imageSource} style={styles.image} />
+      <View style={styles.labelContainer}>
+        <Text style={styles.label} numberOfLines={1}>
+          Chapitre {chapterNumber}
+        </Text>
+      </View>
     </Pressable>
   );
 }
@@ -43,10 +42,12 @@ const styles = StyleSheet.create({
   image: {
     width: 70,
     height: 70,
+    marginBottom: 0,
+  },
+  labelContainer: {
+    flexDirection: 'row',
   },
   label: {
-    position: 'absolute',
-    bottom: -25,
     color: '#000000',
     fontSize: 18,
     fontWeight: 'bold',

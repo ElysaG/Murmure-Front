@@ -1,36 +1,40 @@
-import { SafeAreaView, View, Text, TextInput, StyleSheet, ImageBackground } from "react-native";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "../../reducers/userConnection";
-import Button from "../../components/Button";
-import ConfirmModal from "../../components/ConfirmModal";
-import { BACKEND_ADDRESS } from "../../config";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ImageBackground,
+} from 'react-native';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { login } from '../../reducers/userConnection';
+import Button from '../../components/Button';
+import ConfirmModal from '../../components/ConfirmModal';
+import { BACKEND_ADDRESS } from '../../config';
 
 export default function SignInScreen({ navigation }) {
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
-  const [welcomeUsername, setWelcomeUsername] = useState("");
+  const [welcomeUsername, setWelcomeUsername] = useState('');
 
   const handleSignIn = () => {
     if (!email.trim() || !password.trim()) {
-      alert("Veuillez remplir tous les champs");
+      alert('Veuillez remplir tous les champs');
       return;
     }
 
     fetch(`${BACKEND_ADDRESS}/users/signin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.result) {
-
-          // Sauvegarder dans Redux
           dispatch(
             login({
               username: data.username,
@@ -39,30 +43,21 @@ export default function SignInScreen({ navigation }) {
             })
           );
 
-          // Sauvegarder le token dans AsyncStorage pour la détection de connexion
-          AsyncStorage.setItem('userToken', data.token)
-            .then(() => {
-              console.log('[SignIn] ✅ Token sauvegardé dans AsyncStorage');
-            })
-            .catch((error) => {
-              console.error('[SignIn] ❌ Erreur sauvegarde token:', error);
-            });
-
           setWelcomeUsername(data.username);
           setShowWelcomeModal(true);
         } else {
-          alert(data.error || "Identifiants incorrects");
+          alert(data.error || 'Identifiants incorrects');
         }
       })
       .catch((error) => {
-        console.error("Erreur signin:", error);
+        console.error('Erreur signin:', error);
         alert(`Impossible de se connecter. Détails: ${error.message}`);
       });
   };
 
   const handleWelcomeConfirm = () => {
     setShowWelcomeModal(false);
-    navigation.navigate("Home");
+    navigation.navigate('Home');
   };
 
   return (
@@ -106,7 +101,7 @@ export default function SignInScreen({ navigation }) {
 
           <Button
             type="back"
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => navigation.navigate('Home')}
             style={styles.backButton}
           />
 
@@ -130,7 +125,7 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
   },
   container: {
     flex: 1,
@@ -139,35 +134,35 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: "600",
-    color: "#224C4A",
+    fontWeight: '600',
+    color: '#224C4A',
     marginBottom: 40,
-    textAlign: "center",
+    textAlign: 'center',
   },
   form: {
     flex: 1,
   },
   label: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#224C4A",
+    fontWeight: '600',
+    color: '#224C4A',
     marginBottom: 8,
     marginTop: 20,
   },
   input: {
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
     borderWidth: 1,
-    borderColor: "#507C79",
+    borderColor: '#507C79',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    color: "#224C4A",
+    color: '#224C4A',
   },
   submitButton: {
     marginTop: 40,
   },
   backButton: {
-    position: "absolute",
+    position: 'absolute',
     top: 40,
     left: 20,
   },

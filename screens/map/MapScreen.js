@@ -11,6 +11,7 @@ import {
 import Button from '../../components/Button';
 import ChapterButton from '../../components/ChapterButton';
 import ParrotChatBtn from '../../components/ParrotChatBtn';
+import ConfirmModal from '../../components/ConfirmModal';
 import { useState, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,6 +22,7 @@ import { Ionicons } from '@expo/vector-icons';
 export default function MapScreen({ navigation }) {
   const [progress, setProgress] = useState(1); // valeur initiale 1
   const TOTAL_LESSONS = 6;
+  const [showLockedModal, setShowLockedModal] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -28,6 +30,22 @@ export default function MapScreen({ navigation }) {
   const userProgressNb = useSelector(
     (state) => state.userConnection?.userProgress || 0
   );
+
+  // Fonction pour valider l'accès à un chapitre
+  const handleChapterPress = (chapterNumber, lessonNumber) => {
+    // Chapitre 1 est toujours accessible
+    if (chapterNumber === 1) {
+      navigation.navigate('Lesson', { lessonNumber });
+      return;
+    }
+
+    // Pour les chapitres > 1, vérifier si le chapitre précédent a été validé
+    if (userProgressNb >= chapterNumber - 1) {
+      navigation.navigate('Lesson', { lessonNumber });
+    } else {
+      setShowLockedModal(true);
+    }
+  };
 
   useEffect(() => {
     fetch(`${BACKEND_ADDRESS}/chapters/`)
@@ -78,7 +96,7 @@ export default function MapScreen({ navigation }) {
         <ChapterButton
           chapterNumber={3}
           progressNb={userProgressNb}
-          onPress={() => navigation.navigate('Lesson', { lessonNumber: 2 })}
+          onPress={() => handleChapterPress(3, 2)}
           style={styles.chapitre3}
         />
 
@@ -86,7 +104,7 @@ export default function MapScreen({ navigation }) {
         <ChapterButton
           chapterNumber={2}
           progressNb={userProgressNb}
-          onPress={() => navigation.navigate('Lesson', { lessonNumber: 1 })}
+          onPress={() => handleChapterPress(2, 1)}
           style={styles.chapitre2}
         />
 
@@ -94,7 +112,7 @@ export default function MapScreen({ navigation }) {
         <ChapterButton
           chapterNumber={1}
           progressNb={userProgressNb}
-          onPress={() => navigation.navigate('Lesson', { lessonNumber: 0 })}
+          onPress={() => handleChapterPress(1, 0)}
           style={styles.chapitre1}
         />
 
@@ -114,6 +132,13 @@ export default function MapScreen({ navigation }) {
           </Pressable>
         </View>
       </View>
+
+      <ConfirmModal
+        visible={showLockedModal}
+        message="Un pas après l'autre, validez d'abord le chapitre précédent."
+        onConfirm={() => setShowLockedModal(false)}
+        singleButton={true}
+      />
     </ImageBackground>
   );
 }
