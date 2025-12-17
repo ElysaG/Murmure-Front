@@ -7,18 +7,17 @@ import {
   ImageBackground,
   Image,
   Animated,
-  Pressable,
   useWindowDimensions,
 } from "react-native";
 import { useSelector } from "react-redux";
 
 import Button from "../../components/Button";
-import ParrotChatBtn from "../../components/ParrotChatBtn"; // Bouton perroquet pour chat
-import { useFocusEffect } from "@react-navigation/native"; // Pour gérer le focus de l'écran
+import ParrotChatBtn from "../../components/ParrotChatBtn";   // Bouton perroquet pour chat
+import { useFocusEffect } from "@react-navigation/native";    // Pour gérer le focus de l'écran
 
 
 // import pour les infobulles
-import InfoBubble from "../../components/InfoBulleHome"; // composant infobulle personnalisé
+import InfoBubble from "../../components/InfoBulleHome";      // composant infobulle personnalisé
 
 
 
@@ -26,37 +25,53 @@ import InfoBubble from "../../components/InfoBulleHome"; // composant infobulle 
 
 const useResponsiveImagePosition = (imageSource) => {
     const { width: screenW, height: screenH } = useWindowDimensions(); // Dimensions de l'écran
+    const [imageDimensions, setImageDimensions] = useState({ width: 1080, height: 1920 }); // Dimensions par défaut format portrait
+
+    useEffect(() => { //le useEffect sert à charger les dimensions de l'image sur le web
+      // Sur web, on charge l'image pour obtenir ses vraies dimensions
+      if (!Image.resolveAssetSource && typeof imageSource === 'number') {
+        // Sur React Native Web, require() retourne un objet avec une propriété uri ou default
+        const imgUri = imageSource?.default || imageSource;
+        if (typeof window !== 'undefined' && imgUri) {
+          const img = new window.Image();
+          img.onload = () => {
+            setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight });
+            console.log(`[Web] Dimensions réelles de l'image: ${img.naturalWidth}x${img.naturalHeight}`);
+          };
+          img.src = imgUri;
+        }
+      }
+    }, [imageSource]);
 
     // Vérification de sécurité pour éviter les crashes
-    const imageData = Image.resolveAssetSource(imageSource); // Récupère les dimensions de l'image
-    if (!imageData) {
-      console.warn("Image source invalide");
-      return {
-        getPos: () => ({ position: 'absolute' }),
-        scale: 1,
-        originalW: 0,
-        originalH: 0
-      };
+    let imageData = null;
+
+    if (Image.resolveAssetSource) {
+      // Sur mobile (iOS/Android)
+      imageData = Image.resolveAssetSource(imageSource);
+    } else {
+      // Sur web, on utilise les dimensions chargées dynamiquement
+      imageData = imageDimensions;
     }
 
-    const { width: originalW, height: originalH } = imageData; // Dimensions originales de l'image
+    const { width: originalW, height: originalH } = imageData; // variable dimensions originale de l'image
 
-    const screenRatio = screenW / screenH; // Ratio écran
-    const imageRatio = originalW / originalH; // Ratio image
+    const screenRatio = screenW / screenH;            // variable screenRatio pour Ratio écran
+    const imageRatio = originalW / originalH;         // variable imageRatio pour Ratio image
 
-    let scale, xOffset, yOffset;
+    let scale, xOffset, yOffset;                      // variables de calcul
 
-    if (screenRatio > imageRatio) { // L'image est plus "haute" que l'écran
-      scale = screenW / originalW;
+    if (screenRatio > imageRatio) {                   // L'image est plus "haute" que l'écran
+      scale = screenW / originalW; 
       xOffset = 0;
-      yOffset = (screenH - originalH * scale) / 2;  // Centrage vertical
+      yOffset = (screenH - originalH * scale) / 2;    // Centrage vertical
     } else {
       scale = screenH / originalH;
       yOffset = 0;
-      xOffset = (screenW - originalW * scale) / 2; // Centrage horizontal
+      xOffset = (screenW - originalW * scale) / 2;    // Centrage horizontal
     }
-
-    const getPos = (originalX, originalY) => ({ // position après mise à l'échelle et centrage
+ 
+    const getPos = (originalX, originalY) => ({       // position après mise à l'échelle et centrage
       left: xOffset + originalX * scale,
       top: yOffset + originalY * scale,
       position: 'absolute',
@@ -66,7 +81,7 @@ const useResponsiveImagePosition = (imageSource) => {
       getPos,           // Fonction de positionnement
       scale,            // Facteur d'échelle pour adapter les tailles
       originalW,        // Largeur originale de l'image
-      originalH         // Hauteur originale de l'image
+      originalH,         // Hauteur originale de l'image
     };
 };
 
@@ -84,8 +99,8 @@ const PulsingButton = ({ onPress, color, style, buttonScale = 1 }) => {
           Animated.loop(
             Animated.timing(animation, {
               toValue: 1,
-              duration: 2000, // Durée d'un battement (2s)
-              useNativeDriver: true, // Important pour la fluidité sur mobile
+              duration: 2000,         // Durée d'un battement (2s)
+              useNativeDriver: true,  // Important pour la fluidité sur mobile
             })
           ).start();
         }, [animation]);
@@ -93,20 +108,21 @@ const PulsingButton = ({ onPress, color, style, buttonScale = 1 }) => {
         // Interpolation : Transformer la valeur 0->1 en Échelle (taille)
         const scaleAnim = animation.interpolate({
           inputRange: [0, 1],
-          outputRange: [1, 2.5], // Le cercle grandit de 1x à 2.5x sa taille
+          outputRange: [1, 2.5],      // Le cercle grandit de 1x à 2.5x sa taille
         });
 
         // Interpolation : Transformer la valeur 0->1 en Opacité
         const opacityAnim = animation.interpolate({
           inputRange: [0, 1],
-          outputRange: [1, 0], // L'opacité passe de 1 à invisible (0)
+          outputRange: [1, 0],        // L'opacité passe de 1 à invisible (0)
         });
 
   // Couleur dynamique basée sur la prop 'color'
   const rippleColor = color || "#FF5722";
 
 
-    return ( // RETURN DES PULSING BUTTON
+    // RETURN DES PULSING BUTTON
+    return (                                              
       <View style={[styles.buttonWrapper, style, {
         width: 50 * buttonScale,
         height: 50 * buttonScale,
@@ -132,7 +148,8 @@ const PulsingButton = ({ onPress, color, style, buttonScale = 1 }) => {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={onPress}
-            style={[styles.buttonCenter, {
+            style={[styles.buttonCenter, 
+            {
               backgroundColor: 'transparent',
               width: 30 * buttonScale, 
               height: 30 * buttonScale,
@@ -147,48 +164,43 @@ const PulsingButton = ({ onPress, color, style, buttonScale = 1 }) => {
 export default function HomeScreen({ navigation }) {
 
   const backgroundImage = require('../../assets/homescreen.png');
-  const { getPos, scale, originalW, originalH } = useResponsiveImagePosition(backgroundImage); // Utilisation du hook amélioré
-
+  const { getPos, scale, originalW, originalH } = useResponsiveImagePosition(backgroundImage);      // Utilisation du hook amélioré
+                                                                                                    // getPos pour positionner, scale pour adapter les tailles
 
   // --- DÉFINITION DES POSITIONS EN POURCENTAGES ---
+  
+  const posEtagere = getPos(originalW * -0.22, originalH * 0.55);       // PULSING BUTTON ÉTAGÈRE
+  const posCarte = getPos(originalW * 0.33, originalH * 0.55);          // PULSING BUTTON CARTE
 
-  // Étagère : sur la bibliothèque à gauche (environ au centre de l'étagère du milieu)
-  const posEtagere = getPos(originalW * -0.22, originalH * 0.55);
+  const posPerroquet = getPos(originalW * 0.32, originalH * 0.195);     // POSITION PERROQUET CHAT
 
-  // Porte : sur la porte à droite (environ au centre de la poignée)
-  const posCarte = getPos(originalW * 0.33, originalH * 0.55);
+  
+  const { isConnected, username } = useSelector((state) => state.userConnection);       // Récupérer le statut de connexion depuis Redux
 
-  // Perroquet : en haut au centre
-  const posPerroquet = getPos(originalW * 0.29, originalH * 0.214);
-
-  // Récupérer le statut de connexion depuis Redux
-  const { isConnected, username } = useSelector((state) => state.userConnection); // Redux
-
-  // integration de l'infobulle
-    const [infoBubble, setInfoBubble] = useState({ visible: false, message: '' });
+     const [infoBubble, setInfoBubble] = useState({ visible: false, message: '' });     // integration de l'infobulle
 
     // 1. Log à chaque rendu (très important pour voir les mises à jour d'état)
       console.log(`[HomeScreen -- Infobulle] 🎨 Rendu. État bulle: visible=${infoBubble.visible}, msg="${infoBubble.message}"`);
 
 
     useEffect(() => {
-      checkVisitCount();// Appel initial pour vérifier le statut de visite
-    }, [isConnected]); // Dépendance sur isConnected pour réagir aux changements de statut
+      checkVisitCount();    // Appel initial pour vérifier le statut de visite
+    }, [isConnected]);      // Dépendance sur isConnected pour réagir aux changements de statut
 
 
     // NOUVEAU CODE - Basé sur le statut de connexion de l'utilisateur CONNECTED VS NON CONNECTED
     const checkVisitCount = () => {
       // Utiliser le statut de connexion depuis Redux au lieu d'AsyncStorage
-
+      
       if (!isConnected) { // Si l'utilisateur n'est PAS connecté -> message de bienvenue
-        console.log('[HomeScreen -- Infobulle]  Utilisateur NON connecté -> Message de bienvenue');
+        // console.log('[HomeScreen -- Infobulle]  Utilisateur NON connecté -> Message de bienvenue');
         setInfoBubble({
           visible: true,
           message: "✨ Bienvenue sur Murmure! ✨\n\nSouhaitez vous me parler ou commencer votre parcours?\nJe vous invite à cliquer sur l'étagère ou la porte vers le jardin.\n\n À très vite ! 😊"
         });
 
       } else { // Si l'utilisateur EST connecté -> message "ravi de vous revoir"
-        console.log('[HomeScreen -- Infobulle] ✅ Utilisateur connecté -> Message "Ravi de vous revoir"');
+        // console.log('[HomeScreen -- Infobulle] ✅ Utilisateur connecté -> Message "Ravi de vous revoir"');
         setInfoBubble({
           visible: true,
           message: `✨ Ravi de vous revoir ${username}! ✨\n\nPrêt à continuer?\n\nSouhaitez-vous continuer vers votre parcours ou initier une séance de relaxation?\n\nOu peut-être préférez-vous me parler?`
@@ -204,11 +216,9 @@ export default function HomeScreen({ navigation }) {
   
     return (
       <ImageBackground style={styles.background}
-          source={require('../../assets/homescreen.png')}
+          source={require('../../assets/homescreenCadre.png')}
           resizeMode="cover"
           >
-
-          
     
         <View style={styles.container}>
               {/* Bulle d'information */}
@@ -218,12 +228,11 @@ export default function HomeScreen({ navigation }) {
                   onClose={closeInfoBubble}
                 />
 
-
                 <View style={styles.labelContainer}>
 
                   {/* Bouton Mon Compte en haut à gauche */}
                     <Button
-                        label="Mon compte"
+                        label={isConnected ? "Mon compte" : "Se Connecter"}  // Texte dynamique basé sur le redux
                         type="primary"
                         style={styles.compteButton}
                         onPress={() => {
@@ -233,38 +242,30 @@ export default function HomeScreen({ navigation }) {
                     />
 
                   {/* Affichage du statut de connexion */}
-                    {isConnected && (
+                    {/* {isConnected && (
                       <Text style={styles.compteStatus}>
                         connected
-                        
                       </Text>
-                    )}
+                    )} */}
 
                       <View style={styles.header}>
                           <View style={styles.messageBubble}>
+
                               {/* Perroquet : ouvre screen Chat */}
-                                <Pressable
+                                <ParrotChatBtn
                                   onPress={() => {navigation.navigate("Chat")}}
                                   style={[posPerroquet, {
                                     width: 100 * scale,
                                     height: 100 * scale,
+                                    transform: [{ scaleX: -1 }], // Miroir horizontal
                                   }]}
-                                >
-                                    <Image
-                                      source={require("../../assets/chat/perroquet.png")}
-                                      style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        transform: [{ scaleX: -1 }],
-                                      }}
-                                    />
-                                </Pressable>
+                                />
                           </View>
                       </View>
 
                   {/* --- BOUTON 1 (Étagère - Bas à gauche) --- */}
                     <PulsingButton
-                      color="#ebaa20ff" // Or pale
+                      color="#ebaa20ff" // Jaune doux
                       style={posEtagere}
                       buttonScale={scale}
                       onPress={() => {
@@ -286,7 +287,6 @@ export default function HomeScreen({ navigation }) {
 
                 </View>
 
-          {/* Ici ajouter lien vers mon compte */}
         </View>
       </ImageBackground>  
   );
@@ -331,10 +331,11 @@ const styles = StyleSheet.create({
   compteButton: {
     position: "absolute",
     top: 1,
-    right: 60,
+    right: 50,
     marginBottom: 50,
     marginTop: 30,
     zIndex: 100,
+    width: 158,  // Largeur fixe pour éviter le décalage lors du changement de texte
   },
 
   compteStatus: {

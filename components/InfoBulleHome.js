@@ -11,7 +11,7 @@ const InfoBubble = ({ message, visible, onClose }) => {
     // console.log(`[InfoBubble] useEffect déclenché. État visible: ${visible}`);
 
     if (visible) {
-      console.log('[InfoBubble] 🟢 Condition TRUE : Démarrage animation apparition');
+      // console.log('[InfoBubble] 🟢 Condition TRUE : Démarrage animation apparition');
       
       // Animation d'apparition
       Animated.timing(fadeAnim, {
@@ -25,7 +25,7 @@ const InfoBubble = ({ message, visible, onClose }) => {
       const timer = setTimeout(() => {
         // console.log('[InfoBubble] ⏰ Timer écoulé -> Appel de onClose()');
         onClose();
-      }, 200000); // 200 secondes
+      }, 200000);                           // 200 secondes nombre qui peut etre modifie pour la duree de l'infobulle
 
       // Fonction de nettoyage
       return () => {
@@ -41,7 +41,7 @@ const InfoBubble = ({ message, visible, onClose }) => {
         useNativeDriver: true,
       }).start(() => console.log('[InfoBubble] fin de la presence de l\'infobulle'));
     }
-  }, [visible]); // Dépendances du useEffect
+  }, [visible]);                      // Dépendances du useEffect
 
   // LOGIQUE CRITIQUE ICI
   if (!visible) {

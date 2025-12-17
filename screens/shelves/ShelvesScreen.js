@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, ImageBackground, Animated, TouchableOpacity, Image } from "react-native";
 
 import Button from "../../components/Button";
@@ -11,9 +11,35 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'; // Important
 
 const useResponsiveImagePosition = (imageSource) => {
     const { width: screenW, height: screenH } = useWindowDimensions(); // Dimensions de l'écran
+    const [imageDimensions, setImageDimensions] = useState({ width: 1080, height: 1920 }); // Dimensions par défaut format portrait
+
+    useEffect(() => {
+      // Sur web, on charge l'image pour obtenir ses vraies dimensions
+      if (!Image.resolveAssetSource && typeof imageSource === 'number') {
+        // Sur React Native Web, require() retourne un objet avec une propriété uri ou default
+        const imgUri = imageSource?.default || imageSource;
+        if (typeof window !== 'undefined' && imgUri) {
+          const img = new window.Image();
+          img.onload = () => {
+            setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight });
+            console.log(`[Web] Dimensions réelles de l'image: ${img.naturalWidth}x${img.naturalHeight}`);
+          };
+          img.src = imgUri;
+        }
+      }
+    }, [imageSource]);
 
     // Vérification de sécurité pour éviter les crashes
-    const imageData = Image.resolveAssetSource(imageSource);
+    let imageData = null;
+
+    if (Image.resolveAssetSource) {
+      // Sur mobile (iOS/Android)
+      imageData = Image.resolveAssetSource(imageSource);
+    } else {
+      // Sur web, on utilise les dimensions chargées dynamiquement
+      imageData = imageDimensions;
+    }
+
     if (!imageData) {
       console.warn("Image source invalide");
       return {
@@ -26,22 +52,22 @@ const useResponsiveImagePosition = (imageSource) => {
 
     const { width: originalW, height: originalH } = imageData; // Dimensions originales de l'image
 
-    const screenRatio = screenW / screenH; // Ratio écran
-    const imageRatio = originalW / originalH; // Ratio image
+    const screenRatio = screenW / screenH;              // Ratio écran
+    const imageRatio = originalW / originalH;           // Ratio image
 
-    let scale, xOffset, yOffset; // Variables pour le calcul
+    let scale, xOffset, yOffset;                        // Variables pour le calcul
 
-    if (screenRatio > imageRatio) { // L'image est plus "haute" que l'écran
-      scale = screenW / originalW; // On base l'échelle sur la largeur
+    if (screenRatio > imageRatio) {                     // L'image est plus "haute" que l'écran
+      scale = screenW / originalW;                      // On base l'échelle sur la largeur
       xOffset = 0;
-      yOffset = (screenH - originalH * scale) / 2;  // Centrage vertical
+      yOffset = (screenH - originalH * scale) / 2;      // Centrage vertical
     } else {
-      scale = screenH / originalH; // On base l'échelle sur la hauteur
+      scale = screenH / originalH;                      // On base l'échelle sur la hauteur
       yOffset = 0;
-      xOffset = (screenW - originalW * scale) / 2; // Centrage horizontal
+      xOffset = (screenW - originalW * scale) / 2;      // Centrage horizontal
     }
 
-    const getPos = (originalX, originalY) => ({ // position après mise à l'échelle et centrage
+    const getPos = (originalX, originalY) => ({         // position après mise à l'échelle et centrage
       left: xOffset + originalX * scale,
       top: yOffset + originalY * scale,
       position: 'absolute',
@@ -51,7 +77,7 @@ const useResponsiveImagePosition = (imageSource) => {
       getPos,           // Fonction de positionnement
       scale,            // Facteur d'échelle pour adapter les tailles
       originalW,        // Largeur originale de l'image
-      originalH         // Hauteur originale de l'image
+      originalH,         // Hauteur originale de l'image
     };
 };
 
@@ -69,8 +95,8 @@ const PulsingButton = ({ onPress, color, style, buttonScale = 1 }) => {
       Animated.loop(
         Animated.timing(animation, {
           toValue: 1,
-          duration: 2000, // Durée d'un battement (2s)
-          useNativeDriver: true, // Important pour la fluidité sur mobile
+          duration: 2000,                         // Durée d'un battement (2s)
+          useNativeDriver: true,                  // Important pour la fluidité sur mobile
         })
       ).start();
     }, [animation]);
@@ -78,13 +104,13 @@ const PulsingButton = ({ onPress, color, style, buttonScale = 1 }) => {
     // Interpolation : Transformer la valeur 0->1 en Échelle (taille)
     const scaleAnim = animation.interpolate({
       inputRange: [0, 1],
-      outputRange: [1, 2.5], // Le cercle grandit de 1x à 2.5x sa taille
+      outputRange: [1, 2.5],                      // Le cercle grandit de 1x à 2.5x sa taille
     });
 
     // Interpolation : Transformer la valeur 0->1 en Opacité
     const opacityAnim = animation.interpolate({
       inputRange: [0, 1],
-      outputRange: [1, 0], // L'opacité passe de 1 à invisible (0)
+      outputRange: [1, 0],                        // L'opacité passe de 1 à invisible (0)
     });
 
     // Couleur dynamique basée sur la prop 'color'
@@ -99,7 +125,7 @@ const PulsingButton = ({ onPress, color, style, buttonScale = 1 }) => {
           {/* L'anneau animé en arrière-plan */}
           <Animated.View
             style={[
-              styles.pulseRing, // Style de base de l'anneau
+              styles.pulseRing,                  // Style de base de l'anneau
               {
                 backgroundColor: rippleColor,
                 width: 20 * buttonScale,
