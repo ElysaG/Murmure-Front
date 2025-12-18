@@ -15,7 +15,9 @@ import ConfirmModal from '../../components/ConfirmModal';
 import { BACKEND_ADDRESS } from '../../config';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function SignUpScreen({ navigation }) {
+export default function SignUpScreen({ navigation, route }) {
+  const initialProgressNb = route?.params?.initialProgressNb || 0;
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,7 +32,12 @@ export default function SignUpScreen({ navigation }) {
     fetch(`${BACKEND_ADDRESS}/users/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+        progressNb: initialProgressNb
+      }),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -48,7 +55,7 @@ export default function SignUpScreen({ navigation }) {
 
   const handleSuccessConfirm = () => {
     setShowSuccessModal(false);
-    navigation.navigate('Compte');
+    navigation.navigate('SignIn');
   };
 
   return (

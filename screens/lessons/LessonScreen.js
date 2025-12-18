@@ -18,7 +18,9 @@ export default function LessonScreen({ navigation, route }) {
 
   const insets = useSafeAreaInsets(); //used to get screen SafeArea dimensions
 
-  const { userToken } = useSelector((state) => state.userConnection || {});
+  const { userToken, userProgress } = useSelector(
+    (state) => state.userConnection || {}
+  );
 
   const [contentToDisplay, setContentToDisplay] = useState('lesson');
   const [quizQuestionIndex, setQuizQuestionIndex] = useState(0);
@@ -26,6 +28,7 @@ export default function LessonScreen({ navigation, route }) {
 
   const [showExitPopup, setShowExitPopup] = useState(false); // popup sortie
   const [exitBehavior, setExitBehavior] = useState();
+  const [showSignupModal, setShowSignupModal] = useState(false); // popup inscription
 
   const chapters = useSelector((state) => state.chapters);
 
@@ -147,7 +150,11 @@ export default function LessonScreen({ navigation, route }) {
         setContentToDisplay('flashcard');
         break;
       case 'flashcard':
-        // Mettre à jour progressNb
+        if (userProgress === 0 && chapter.index === 1 && !userToken) {
+          setShowSignupModal(true);
+          return;
+        }
+
         if (userToken) {
           try {
             const response = await fetch(`${BACKEND_ADDRESS}/users/progress`, {
@@ -234,6 +241,16 @@ export default function LessonScreen({ navigation, route }) {
         onConfirm={() => exitBehavior()}
         confirmText="Quitter"
         cancelText="Rester"
+      />
+
+      <ConfirmModal
+        visible={showSignupModal}
+        message="Vous avez terminé le premier chapitre ! Inscrivez-vous pour continuer l'aventure : "
+        onConfirm={() => {
+          setShowSignupModal(false);
+          navigation.navigate('SignUp', { initialProgressNb: 1 });
+        }}
+        singleButton={true}
       />
     </View>
   );

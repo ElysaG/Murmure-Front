@@ -15,7 +15,6 @@ import { login } from '../../reducers/userConnection';
 import Button from '../../components/Button';
 import ConfirmModal from '../../components/ConfirmModal';
 import { BACKEND_ADDRESS } from '../../config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function SignInScreen({ navigation }) {
@@ -48,15 +47,6 @@ export default function SignInScreen({ navigation }) {
               progressNb: data.progressNb,
             })
           );
-
-          // Sauvegarder le token dans AsyncStorage pour la détection de connexion
-          AsyncStorage.setItem('userToken', data.token)
-            .then(() => {
-              console.log('[SignIn] ✅ Token sauvegardé dans AsyncStorage');
-            })
-            .catch((error) => {
-              console.error('[SignIn] ❌ Erreur sauvegarde token:', error);
-            });
 
           setWelcomeUsername(data.username);
           setShowWelcomeModal(true);

@@ -15,7 +15,7 @@ const userConnectionSlice = createSlice({
       state.isConnected = true;
       state.username = action.payload.username;
       state.userToken = action.payload.token;
-      state.userProgress = action.payload.progressNb;
+      state.userProgress = action.payload.progressNb || 0;
     },
     logout: (state) => {
       state.isConnected = false;
