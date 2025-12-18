@@ -10,18 +10,22 @@ import {
   Keyboard,
 } from 'react-native';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { login } from '../../reducers/userConnection';
 import Button from '../../components/Button';
 import ConfirmModal from '../../components/ConfirmModal';
 import { BACKEND_ADDRESS } from '../../config';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function SignUpScreen({ navigation, route }) {
+  const dispatch = useDispatch();
   const initialProgressNb = route?.params?.initialProgressNb || 0;
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [welcomeUsername, setWelcomeUsername] = useState('');
 
   const handleSignUp = () => {
     if (!username.trim() || !email.trim() || !password.trim()) {
@@ -36,12 +40,22 @@ export default function SignUpScreen({ navigation, route }) {
         username,
         email,
         password,
-        progressNb: initialProgressNb
+        progressNb: initialProgressNb,
       }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.result) {
+          // Connecter automatiquement l'utilisateur après l'inscription
+          dispatch(
+            login({
+              username: data.username,
+              token: data.token,
+              progressNb: data.progressNb,
+            })
+          );
+
+          setWelcomeUsername(data.username);
           setShowSuccessModal(true);
         } else {
           alert(data.error || 'Une erreur est survenue');
@@ -55,7 +69,7 @@ export default function SignUpScreen({ navigation, route }) {
 
   const handleSuccessConfirm = () => {
     setShowSuccessModal(false);
-    navigation.navigate('SignIn');
+    navigation.navigate('Home');
   };
 
   return (
@@ -112,7 +126,7 @@ export default function SignUpScreen({ navigation, route }) {
 
             <ConfirmModal
               visible={showSuccessModal}
-              message="Compte créé avec succès ! Maintenant, connectez-vous sur l'écran suivant"
+              message={`Bienvenue ${welcomeUsername} ! Votre compte a été créé avec succès.`}
               onConfirm={handleSuccessConfirm}
               singleButton={true}
             />
