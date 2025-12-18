@@ -71,7 +71,7 @@ const InfoBubble = ({ message, visible, onClose }) => {
 const styles = StyleSheet.create({
   infoBubbleContainer: {
     position: 'absolute',
-    bottom: 640,
+    bottom: 670,
    
     left: 20,
     right: 20,
